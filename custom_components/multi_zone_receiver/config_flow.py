@@ -1,5 +1,7 @@
 """Adds config flow for Multi Zone Receiver."""
 
+import asyncio
+
 from homeassistant import config_entries
 from homeassistant.core import callback
 import voluptuous as vol
@@ -59,6 +61,7 @@ class MultiZoneReceiverFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         """Return true if credentials is valid."""
         try:
             # perform a test here
+            await asyncio.sleep(0)
             return True
         except Exception:  # pylint: disable=broad-except
             pass
