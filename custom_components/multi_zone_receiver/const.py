@@ -17,7 +17,8 @@ BINARY_SENSOR_DEVICE_CLASS = "connectivity"
 # Platforms
 BINARY_SENSOR = "binary_sensor"
 SENSOR = "sensor"
-PLATFORMS = [BINARY_SENSOR, SENSOR]
+MEDIA_PLAYER = "media_player"
+PLATFORMS = [BINARY_SENSOR, SENSOR, MEDIA_PLAYER]
 
 
 # Configuration and options
