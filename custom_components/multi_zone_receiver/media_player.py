@@ -1,4 +1,4 @@
-"""Binary sensor platform for Multi Zone Receiver."""
+"""Media Player platform for Multi Zone Receiver."""
 
 from homeassistant.components.media_player import MediaPlayerEntity
 
@@ -7,7 +7,7 @@ from .entity import MultiZoneReceiverEntity
 
 
 async def async_setup_entry(hass, entry, async_add_devices):
-    """Setup binary_sensor platform."""
+    """Setup media_player platform."""
     async_add_devices([MultiZoneReceiverMediaPlayer(entry)])
 
 
