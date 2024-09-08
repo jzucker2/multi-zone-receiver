@@ -12,7 +12,7 @@ import logging
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config, HomeAssistant
 
-from .const import CONF_PASSWORD, CONF_USERNAME, DOMAIN, PLATFORMS, STARTUP_MESSAGE
+from .const import DOMAIN, PLATFORMS, STARTUP_MESSAGE
 
 SCAN_INTERVAL = timedelta(seconds=30)
 
