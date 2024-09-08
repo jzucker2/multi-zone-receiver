@@ -1,21 +1,24 @@
 """MultiZoneReceiverEntity class"""
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.helpers.entity import Entity
 
-from .const import ATTRIBUTION
 from .const import DOMAIN
 from .const import NAME
 from .const import VERSION
 
 
-class MultiZoneReceiverEntity(CoordinatorEntity):
-    def __init__(self, coordinator, config_entry):
-        super().__init__(coordinator)
+class MultiZoneReceiverEntity(Entity):
+    def __init__(self, config_entry):
+        super().__init__()
         self.config_entry = config_entry
+
+    @property
+    def config_entry_id(self):
+        return self.config_entry.entry_id
 
     @property
     def unique_id(self):
         """Return a unique ID to use for this entity."""
-        return self.config_entry.entry_id
+        return self.config_entry_id
 
     @property
     def device_info(self):
@@ -24,13 +27,4 @@ class MultiZoneReceiverEntity(CoordinatorEntity):
             "name": NAME,
             "model": VERSION,
             "manufacturer": NAME,
-        }
-
-    @property
-    def device_state_attributes(self):
-        """Return the state attributes."""
-        return {
-            "attribution": ATTRIBUTION,
-            "id": str(self.coordinator.data.get("id")),
-            "integration": DOMAIN,
         }
