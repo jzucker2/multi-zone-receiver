@@ -49,7 +49,7 @@ async def test_setup_unload_and_reload_entry(hass, bypass_get_data):
     assert config_entry.entry_id not in hass.data[DOMAIN]
 
 
-async def test_setup_entry_exception(hass, error_on_get_data):
+async def test_setup_entry_exception(hass):
     """Test ConfigEntryNotReady when API raises an exception during entry setup."""
     config_entry = MockConfigEntry(domain=DOMAIN, data=MOCK_CONFIG, entry_id="test")
 
