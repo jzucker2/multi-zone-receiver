@@ -94,3 +94,10 @@ Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [in
 [releases-shield]: https://img.shields.io/github/release/jzucker2/multi-zone-receiver.svg?style=for-the-badge
 [releases]: https://github.com/jzucker2/multi-zone-receiver/releases
 [user_profile]: https://github.com/jzucker2
+
+## Notes
+
+- Custom integration requirements
+  - https://developers.home-assistant.io/docs/creating_integration_manifest/#requirements
+  - https://github.com/home-assistant/core/blob/dev/requirements.txt
+
