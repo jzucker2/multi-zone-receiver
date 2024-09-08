@@ -1,14 +1,12 @@
 """Adds config flow for Multi Zone Receiver."""
-import voluptuous as vol
+
+import asyncio
+
 from homeassistant import config_entries
 from homeassistant.core import callback
-from homeassistant.helpers.aiohttp_client import async_create_clientsession
+import voluptuous as vol
 
-from .api import MultiZoneReceiverApiClient
-from .const import CONF_PASSWORD
-from .const import CONF_USERNAME
-from .const import DOMAIN
-from .const import PLATFORMS
+from .const import CONF_PASSWORD, CONF_USERNAME, DOMAIN, PLATFORMS
 
 
 class MultiZoneReceiverFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
@@ -62,9 +60,8 @@ class MultiZoneReceiverFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     async def _test_credentials(self, username, password):
         """Return true if credentials is valid."""
         try:
-            session = async_create_clientsession(self.hass)
-            client = MultiZoneReceiverApiClient(username, password, session)
-            await client.async_get_data()
+            # perform a test here
+            await asyncio.sleep(0)
             return True
         except Exception:  # pylint: disable=broad-except
             pass

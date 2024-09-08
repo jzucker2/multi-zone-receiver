@@ -1,9 +1,10 @@
 """Constants for Multi Zone Receiver."""
+
 # Base component constants
 NAME = "Multi Zone Receiver"
 DOMAIN = "multi_zone_receiver"
 DOMAIN_DATA = f"{DOMAIN}_data"
-VERSION = "0.2.0"
+VERSION = "0.3.0"
 
 ATTRIBUTION = "Data provided by http://jsonplaceholder.typicode.com/"
 ISSUE_URL = "https://github.com/jzucker2/multi-zone-receiver/issues"
@@ -17,8 +18,8 @@ BINARY_SENSOR_DEVICE_CLASS = "connectivity"
 # Platforms
 BINARY_SENSOR = "binary_sensor"
 SENSOR = "sensor"
-SWITCH = "switch"
-PLATFORMS = [BINARY_SENSOR, SENSOR, SWITCH]
+MEDIA_PLAYER = "media_player"
+PLATFORMS = [BINARY_SENSOR, SENSOR, MEDIA_PLAYER]
 
 
 # Configuration and options

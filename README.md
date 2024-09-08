@@ -19,11 +19,10 @@ please look at the [User Guide in the Cookiecutter documentation](https://cookie
 
 **This component will set up the following platforms.**
 
-| Platform        | Description                                                               |
-| --------------- | ------------------------------------------------------------------------- |
-| `binary_sensor` | Show something `True` or `False`.                                         |
+| Platform        | Description                             |
+| --------------- | --------------------------------------- |
+| `binary_sensor` | Show something `True` or `False`.       |
 | `sensor`        | Show info from Multi Zone Receiver API. |
-| `switch`        | Switch something `True` or `False`.                                       |
 
 ![example][exampleimg]
 
@@ -94,3 +93,9 @@ Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [in
 [releases-shield]: https://img.shields.io/github/release/jzucker2/multi-zone-receiver.svg?style=for-the-badge
 [releases]: https://github.com/jzucker2/multi-zone-receiver/releases
 [user_profile]: https://github.com/jzucker2
+
+## Notes
+
+- Custom integration requirements
+  - https://developers.home-assistant.io/docs/creating_integration_manifest/#requirements
+  - https://github.com/home-assistant/core/blob/dev/requirements.txt
