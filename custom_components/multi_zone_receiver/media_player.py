@@ -1,8 +1,8 @@
 """Binary sensor platform for Multi Zone Receiver."""
+
 from homeassistant.components.media_player import MediaPlayerEntity
 
-from .const import MEDIA_PLAYER
-from .const import DEFAULT_NAME
+from .const import DEFAULT_NAME, MEDIA_PLAYER
 from .entity import MultiZoneReceiverEntity
 
 

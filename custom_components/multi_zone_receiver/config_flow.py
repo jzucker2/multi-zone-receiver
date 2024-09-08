@@ -1,12 +1,10 @@
 """Adds config flow for Multi Zone Receiver."""
-import voluptuous as vol
+
 from homeassistant import config_entries
 from homeassistant.core import callback
+import voluptuous as vol
 
-from .const import CONF_PASSWORD
-from .const import CONF_USERNAME
-from .const import DOMAIN
-from .const import PLATFORMS
+from .const import CONF_PASSWORD, CONF_USERNAME, DOMAIN, PLATFORMS
 
 
 class MultiZoneReceiverFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):

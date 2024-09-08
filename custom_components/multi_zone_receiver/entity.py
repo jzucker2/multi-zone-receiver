@@ -1,9 +1,8 @@
 """MultiZoneReceiverEntity class"""
+
 from homeassistant.helpers.entity import Entity
 
-from .const import DOMAIN
-from .const import NAME
-from .const import VERSION
+from .const import DOMAIN, NAME, VERSION
 
 
 class MultiZoneReceiverEntity(Entity):

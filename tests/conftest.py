@@ -1,4 +1,5 @@
 """Global fixtures for Multi Zone Receiver integration."""
+
 from unittest.mock import patch
 
 import pytest

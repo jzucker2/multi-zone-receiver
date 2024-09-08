@@ -1,7 +1,6 @@
 """Sensor platform for Multi Zone Receiver."""
-from .const import DEFAULT_NAME
-from .const import ICON
-from .const import SENSOR
+
+from .const import DEFAULT_NAME, ICON, SENSOR
 from .entity import MultiZoneReceiverEntity
 
 
@@ -21,7 +20,7 @@ class MultiZoneReceiverSensor(MultiZoneReceiverEntity):
     @property
     def state(self):
         """Return the state of the sensor."""
-        return 'foo'
+        return "foo"
 
     @property
     def icon(self):

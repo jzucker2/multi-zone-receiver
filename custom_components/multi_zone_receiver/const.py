@@ -1,4 +1,5 @@
 """Constants for Multi Zone Receiver."""
+
 # Base component constants
 NAME = "Multi Zone Receiver"
 DOMAIN = "multi_zone_receiver"

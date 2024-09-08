@@ -1,19 +1,15 @@
 """Test Multi Zone Receiver setup process."""
+
+from homeassistant.exceptions import ConfigEntryNotReady
 import pytest
+from pytest_homeassistant_custom_component.common import MockConfigEntry
+
 from custom_components.multi_zone_receiver import (
     async_reload_entry,
-)
-from custom_components.multi_zone_receiver import (
     async_setup_entry,
-)
-from custom_components.multi_zone_receiver import (
     async_unload_entry,
 )
-from custom_components.multi_zone_receiver.const import (
-    DOMAIN,
-)
-from homeassistant.exceptions import ConfigEntryNotReady
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from custom_components.multi_zone_receiver.const import DOMAIN
 
 from .const import MOCK_CONFIG
 
