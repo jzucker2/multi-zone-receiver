@@ -1,0 +1,10 @@
+{
+  "domain": "multi_zone_receiver",
+  "name": "Multi Zone Receiver",
+  "documentation": "https://github.com/jzucker2/multi-zone-receiver",
+  "issue_tracker": "https://github.com/jzucker2/multi-zone-receiver/issues",
+  "dependencies": [],
+  "config_flow": true,
+  "codeowners": ["@jzucker2"],
+  "requirements": []
+}

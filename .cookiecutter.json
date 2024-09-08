@@ -1,0 +1,13 @@
+{
+  "_checkout": "2021.1.1",
+  "_output_dir": "/Users/jordanz/Documents/Coding/home_assistant_custom_components/cookiecutter",
+  "_repo_dir": "/Users/jordanz/.cookiecutters/cookiecutter-homeassistant-custom-component",
+  "_template": "gh:oncleben31/cookiecutter-homeassistant-custom-component",
+  "class_name_prefix": "MultiZoneReceiver",
+  "domain_name": "multi_zone_receiver",
+  "friendly_name": "Multi Zone Receiver",
+  "github_user": "jzucker2",
+  "project_name": "multi-zone-receiver",
+  "test_suite": "yes",
+  "version": "0.1.0"
+}
