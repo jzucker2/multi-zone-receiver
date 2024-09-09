@@ -6,15 +6,12 @@ https://github.com/jzucker2/multi-zone-receiver
 """
 
 import asyncio
-from datetime import timedelta
 import logging
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config, HomeAssistant
 
 from .const import DOMAIN, PLATFORMS, STARTUP_MESSAGE
-
-SCAN_INTERVAL = timedelta(seconds=30)
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
 
