@@ -1,6 +1,7 @@
 """Adds config flow for Multi Zone Receiver."""
 
 import asyncio
+import logging
 
 from homeassistant import config_entries
 from homeassistant.components.media_player import DOMAIN as MEDIA_PLAYER_DOMAIN
@@ -10,6 +11,8 @@ from homeassistant.helpers import config_validation as cv
 import voluptuous as vol
 
 from .const import CONF_ZONE_1, CONF_ZONE_2, CONF_ZONE_3, DOMAIN, PLATFORMS
+
+_LOGGER: logging.Logger = logging.getLogger(__package__)
 
 # This is the schema that used to display the UI to the user. This simple
 # schema has a single required host field, but it could include a number of fields
@@ -51,12 +54,7 @@ class MultiZoneReceiverFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         #     return self.async_abort(reason="single_instance_allowed")
 
         if user_input is not None:
-            valid = await self._test_credentials(
-                user_input[CONF_NAME],
-                user_input[CONF_ZONE_1],
-                user_input[CONF_ZONE_2],
-                user_input[CONF_ZONE_3],
-            )
+            valid = await self._test_credentials(user_input)
             if valid:
                 return self.async_create_entry(
                     title=user_input[CONF_NAME], data=user_input
@@ -81,10 +79,11 @@ class MultiZoneReceiverFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             errors=self._errors,
         )
 
-    async def _test_credentials(self, name, zone_1, zone_2, zone_3):
+    async def _test_credentials(self, user_input):
         """Return true if credentials is valid."""
         try:
             # perform a test here
+            _LOGGER.debug("Test credentials user_input: %s", user_input)
             await asyncio.sleep(0)
             return True
         except Exception:  # pylint: disable=broad-except
