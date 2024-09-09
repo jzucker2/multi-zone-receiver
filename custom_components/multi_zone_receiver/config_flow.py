@@ -4,12 +4,19 @@ import asyncio
 
 from homeassistant import config_entries
 from homeassistant.components.media_player import DOMAIN as MEDIA_PLAYER_DOMAIN
-from homeassistant.const import CONF_ICON, CONF_NAME, CONF_SOURCE
 from homeassistant.core import callback
 from homeassistant.helpers import config_validation as cv
 import voluptuous as vol
 
-from .const import CONF_PASSWORD, CONF_USERNAME, CONF_ZONES, DOMAIN, PLATFORMS
+from .const import (
+    CONF_PASSWORD,
+    CONF_USERNAME,
+    CONF_ZONE_1,
+    CONF_ZONE_2,
+    CONF_ZONE_3,
+    DOMAIN,
+    PLATFORMS,
+)
 
 # This is the schema that used to display the UI to the user. This simple
 # schema has a single required host field, but it could include a number of fields
@@ -24,13 +31,9 @@ from .const import CONF_PASSWORD, CONF_USERNAME, CONF_ZONES, DOMAIN, PLATFORMS
 # figure this out or look further into it.
 DATA_SCHEMA = vol.Schema(
     {
-        vol.Required(CONF_ZONES): cv.ensure_list(
-            {
-                vol.Required(CONF_SOURCE): cv.entity_domain(MEDIA_PLAYER_DOMAIN),
-                vol.Optional(CONF_NAME): cv.string,
-                vol.Optional(CONF_ICON): cv.icon,
-            }
-        )
+        vol.Required(CONF_ZONE_1): cv.entity_domain(MEDIA_PLAYER_DOMAIN),
+        vol.Required(CONF_ZONE_2): cv.entity_domain(MEDIA_PLAYER_DOMAIN),
+        vol.Required(CONF_ZONE_3): cv.entity_domain(MEDIA_PLAYER_DOMAIN),
     }
 )
 

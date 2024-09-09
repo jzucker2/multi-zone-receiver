@@ -27,6 +27,9 @@ CONF_ENABLED = "enabled"
 CONF_USERNAME = "username"
 CONF_PASSWORD = "password"
 CONF_ZONES = "zones"
+CONF_ZONE_1 = "zone_1"
+CONF_ZONE_2 = "zone_2"
+CONF_ZONE_3 = "zone_3"
 
 # Defaults
 DEFAULT_NAME = DOMAIN

@@ -99,3 +99,5 @@ Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [in
 - Custom integration requirements
   - https://developers.home-assistant.io/docs/creating_integration_manifest/#requirements
   - https://github.com/home-assistant/core/blob/dev/requirements.txt
+- denon avr component
+  - https://github.com/home-assistant/core/tree/dev/homeassistant/components/denonavr
