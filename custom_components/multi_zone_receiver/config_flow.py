@@ -4,13 +4,19 @@ import asyncio
 import logging
 
 from homeassistant import config_entries
-from homeassistant.components.media_player import DOMAIN as MEDIA_PLAYER_DOMAIN
 from homeassistant.const import CONF_NAME
 from homeassistant.core import callback
 from homeassistant.helpers import config_validation as cv
 import voluptuous as vol
 
-from .const import CONF_ZONE_1, CONF_ZONE_2, CONF_ZONE_3, DOMAIN, PLATFORMS
+from .const import (
+    CONF_ZONE_1,
+    CONF_ZONE_2,
+    CONF_ZONE_3,
+    DOMAIN,
+    MEDIA_PLAYER,
+    PLATFORMS,
+)
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
 
@@ -28,9 +34,9 @@ _LOGGER: logging.Logger = logging.getLogger(__package__)
 DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_NAME): str,
-        vol.Required(CONF_ZONE_1): cv.entity_domain(MEDIA_PLAYER_DOMAIN),
-        vol.Required(CONF_ZONE_2): cv.entity_domain(MEDIA_PLAYER_DOMAIN),
-        vol.Required(CONF_ZONE_3): cv.entity_domain(MEDIA_PLAYER_DOMAIN),
+        vol.Required(CONF_ZONE_1): cv.entity_domain(MEDIA_PLAYER),
+        vol.Required(CONF_ZONE_2): cv.entity_domain(MEDIA_PLAYER),
+        vol.Required(CONF_ZONE_3): cv.entity_domain(MEDIA_PLAYER),
     }
 )
 
