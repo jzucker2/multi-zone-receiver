@@ -2,11 +2,14 @@
 
 from homeassistant.components.binary_sensor import BinarySensorEntity
 
+from . import MultiZoneReceiverConfigEntry
 from .const import BINARY_SENSOR, BINARY_SENSOR_DEVICE_CLASS, DEFAULT_NAME
 from .entity import MultiZoneReceiverEntity
 
 
-async def async_setup_entry(hass, entry, async_add_devices):
+async def async_setup_entry(
+    hass, entry: MultiZoneReceiverConfigEntry, async_add_devices
+):
     """Setup binary_sensor platform."""
     async_add_devices([MultiZoneReceiverBinarySensor(entry)])
 
