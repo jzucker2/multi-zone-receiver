@@ -4,19 +4,12 @@ import asyncio
 
 from homeassistant import config_entries
 from homeassistant.components.media_player import DOMAIN as MEDIA_PLAYER_DOMAIN
+from homeassistant.const import CONF_NAME
 from homeassistant.core import callback
 from homeassistant.helpers import config_validation as cv
 import voluptuous as vol
 
-from .const import (
-    CONF_PASSWORD,
-    CONF_USERNAME,
-    CONF_ZONE_1,
-    CONF_ZONE_2,
-    CONF_ZONE_3,
-    DOMAIN,
-    PLATFORMS,
-)
+from .const import CONF_ZONE_1, CONF_ZONE_2, CONF_ZONE_3, DOMAIN, PLATFORMS
 
 # This is the schema that used to display the UI to the user. This simple
 # schema has a single required host field, but it could include a number of fields
@@ -31,6 +24,7 @@ from .const import (
 # figure this out or look further into it.
 DATA_SCHEMA = vol.Schema(
     {
+        vol.Required(CONF_NAME): str,
         vol.Required(CONF_ZONE_1): cv.entity_domain(MEDIA_PLAYER_DOMAIN),
         vol.Required(CONF_ZONE_2): cv.entity_domain(MEDIA_PLAYER_DOMAIN),
         vol.Required(CONF_ZONE_3): cv.entity_domain(MEDIA_PLAYER_DOMAIN),
@@ -42,7 +36,7 @@ class MultiZoneReceiverFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     """Config flow for multi_zone_receiver."""
 
     VERSION = 1
-    CONNECTION_CLASS = config_entries.CONN_CLASS_CLOUD_POLL
+    CONNECTION_CLASS = config_entries.CONN_CLASS_LOCAL_POLL
 
     def __init__(self):
         """Initialize."""
@@ -58,11 +52,14 @@ class MultiZoneReceiverFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             valid = await self._test_credentials(
-                user_input[CONF_USERNAME], user_input[CONF_PASSWORD]
+                user_input[CONF_NAME],
+                user_input[CONF_ZONE_1],
+                user_input[CONF_ZONE_2],
+                user_input[CONF_ZONE_3],
             )
             if valid:
                 return self.async_create_entry(
-                    title=user_input[CONF_USERNAME], data=user_input
+                    title=user_input[CONF_NAME], data=user_input
                 )
             else:
                 self._errors["base"] = "auth"
@@ -84,7 +81,7 @@ class MultiZoneReceiverFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             errors=self._errors,
         )
 
-    async def _test_credentials(self, username, password):
+    async def _test_credentials(self, name, zone_1, zone_2, zone_3):
         """Return true if credentials is valid."""
         try:
             # perform a test here
@@ -126,5 +123,5 @@ class MultiZoneReceiverOptionsFlowHandler(config_entries.OptionsFlow):
     async def _update_options(self):
         """Update config entry options."""
         return self.async_create_entry(
-            title=self.config_entry.data.get(CONF_USERNAME), data=self.options
+            title=self.config_entry.data.get(CONF_NAME), data=self.options
         )
