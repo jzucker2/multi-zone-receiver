@@ -6,6 +6,9 @@ from .const import DOMAIN, NAME, VERSION
 
 
 class MultiZoneReceiverEntity(Entity):
+    _attr_has_entity_name = True
+    _attr_should_poll = False
+
     def __init__(self, config_entry):
         super().__init__()
         self.config_entry = config_entry

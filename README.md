@@ -103,3 +103,5 @@ Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [in
   - https://github.com/home-assistant/core/tree/dev/homeassistant/components/denonavr
 - https://developers.home-assistant.io/blog/2024/04/30/store-runtime-data-inside-config-entry/
 - https://developers.home-assistant.io/blog/2024/08/05/coordinator_async_setup/
+- https://developers.home-assistant.io/blog/2024/05/01/improved-hass-data-typing
+- https://github.com/home-assistant/core/blob/dev/homeassistant/components/ecowitt/entity.py
