@@ -4,7 +4,7 @@
 NAME = "Multi Zone Receiver"
 DOMAIN = "multi_zone_receiver"
 DOMAIN_DATA = f"{DOMAIN}_data"
-VERSION = "0.5.15"
+VERSION = "0.5.16"
 
 ATTRIBUTION = "Data provided by http://jsonplaceholder.typicode.com/"
 ISSUE_URL = "https://github.com/jzucker2/multi-zone-receiver/issues"
@@ -21,6 +21,12 @@ SENSOR = "sensor"
 MEDIA_PLAYER = "media_player"
 PLATFORMS = [BINARY_SENSOR, SENSOR, MEDIA_PLAYER]
 
+# Services
+SERVICE_TOGGLE_VOLUME_MUTE = "toggle_volume_mute"
+SERVICE_TOGGLE_POWER = "toggle_power"
+
+# Input Keys
+ATTR_ZONES = "zones"
 
 # Configuration and options
 CONF_ENABLED = "enabled"

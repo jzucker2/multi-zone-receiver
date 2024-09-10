@@ -24,10 +24,15 @@ from homeassistant.const import (
 )
 
 from . import MultiZoneReceiverConfigEntry
-from .const import DEFAULT_NAME, DOMAIN, MEDIA_PLAYER
+from .const import (
+    ATTR_ZONES,
+    DEFAULT_NAME,
+    DOMAIN,
+    MEDIA_PLAYER,
+    SERVICE_TOGGLE_POWER,
+    SERVICE_TOGGLE_VOLUME_MUTE,
+)
 from .entity import MultiZoneReceiverEntity
-
-ATTR_ZONES = "zones"
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
 
@@ -48,18 +53,27 @@ async def async_setup_entry(
     only_receiver = MultiZoneReceiverMediaPlayer(entry)
     async_add_devices([only_receiver])
     hass.services.async_register(
-        DOMAIN, "toggle_volume_mute", only_receiver.handle_toggle_mute
+        DOMAIN, SERVICE_TOGGLE_VOLUME_MUTE, only_receiver.handle_toggle_mute
     )
-    hass.services.async_register(DOMAIN, "volume_up", only_receiver.handle_volume_up)
     hass.services.async_register(
-        DOMAIN, "volume_down", only_receiver.handle_volume_down
+        DOMAIN, SERVICE_VOLUME_UP, only_receiver.handle_volume_up
     )
-    hass.services.async_register(DOMAIN, "volume_set", only_receiver.handle_volume_set)
     hass.services.async_register(
-        DOMAIN, "volume_mute", only_receiver.handle_volume_mute
+        DOMAIN, SERVICE_VOLUME_DOWN, only_receiver.handle_volume_down
     )
-    hass.services.async_register(DOMAIN, "turn_on", only_receiver.handle_turn_on)
-    hass.services.async_register(DOMAIN, "turn_off", only_receiver.handle_turn_off)
+    hass.services.async_register(
+        DOMAIN, SERVICE_VOLUME_SET, only_receiver.handle_volume_set
+    )
+    hass.services.async_register(
+        DOMAIN, SERVICE_VOLUME_MUTE, only_receiver.handle_volume_mute
+    )
+    hass.services.async_register(DOMAIN, SERVICE_TURN_ON, only_receiver.handle_turn_on)
+    hass.services.async_register(
+        DOMAIN, SERVICE_TURN_OFF, only_receiver.handle_turn_off
+    )
+    hass.services.async_register(
+        DOMAIN, SERVICE_TOGGLE_POWER, only_receiver.handle_toggle_power
+    )
 
 
 class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
@@ -270,6 +284,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
 
     async def handle_toggle_mute(self, call):
         """Handle the service action call."""
+        # FIXME: this doesn't actually work yet
         _LOGGER.debug("handle_toggle_mute call: %s", call)
         zones = self._get_zone_entities(call.data)
         await self._async_mute_volume(True, zones=zones)
@@ -299,6 +314,13 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         zones = self._get_zone_entities(call.data)
         volume_mute = call.data.get(ATTR_MEDIA_VOLUME_MUTED)
         await self._async_mute_volume(volume_mute, zones=zones)
+
+    async def handle_toggle_power(self, call):
+        """Handle the service action call."""
+        # FIXME: this doesn't actually work yet
+        _LOGGER.debug("handle_toggle_power call: %s", call)
+        zones = self._get_zone_entities(call.data)
+        await self._async_mute_volume(True, zones=zones)
 
     async def handle_turn_on(self, call):
         """Handle the service action call."""
