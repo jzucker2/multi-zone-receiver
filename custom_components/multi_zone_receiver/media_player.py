@@ -1,5 +1,6 @@
 """Media Player platform for Multi Zone Receiver."""
 
+import asyncio
 import logging
 
 from homeassistant.components.media_player import (
@@ -103,6 +104,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         input_source = state.attributes[ATTR_INPUT_SOURCE]
         return input_source
 
+    @property
     def source_list(self) -> list[str] | None:
         """List of available input sources."""
         state = self.hass.states.get(self.main_zone_entity)
@@ -111,14 +113,17 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
 
     async def async_turn_on(self) -> None:
         """Turn on media player."""
-        await self.hass.services.async_call(
-            MEDIA_PLAYER_DOMAIN,
-            SERVICE_TURN_ON,
-            {},
-            blocking=True,
-            target={ATTR_ENTITY_ID: self.default_zones},
-            context=self._context,
-        )
+        # FIXME: check entity values instead of pausing
+        for entity in self.default_zones:
+            await self.hass.services.async_call(
+                MEDIA_PLAYER_DOMAIN,
+                SERVICE_TURN_ON,
+                {},
+                blocking=True,
+                target={ATTR_ENTITY_ID: entity},
+                context=self._context,
+            )
+            await asyncio.sleep(1)
 
     async def async_turn_off(self) -> None:
         """Turn off media player."""
