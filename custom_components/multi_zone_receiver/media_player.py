@@ -1,7 +1,11 @@
 """Media Player platform for Multi Zone Receiver."""
 
 from homeassistant.components.media_player import (
+    ATTR_INPUT_SOURCE,
+    ATTR_MEDIA_VOLUME_LEVEL,
+    ATTR_MEDIA_VOLUME_MUTED,
     DOMAIN as MEDIA_PLAYER_DOMAIN,
+    SERVICE_SELECT_SOURCE,
     MediaPlayerDeviceClass,
     MediaPlayerEntity,
     MediaPlayerEntityFeature,
@@ -11,6 +15,8 @@ from homeassistant.const import (
     SERVICE_TURN_OFF,
     SERVICE_TURN_ON,
     SERVICE_VOLUME_DOWN,
+    SERVICE_VOLUME_MUTE,
+    SERVICE_VOLUME_SET,
     SERVICE_VOLUME_UP,
 )
 
@@ -19,9 +25,12 @@ from .const import DEFAULT_NAME, MEDIA_PLAYER
 from .entity import MultiZoneReceiverEntity
 
 MULTI_ZONE_SUPPORTED_FEATURES = (
-    MediaPlayerEntityFeature.TURN_ON
-    | MediaPlayerEntityFeature.TURN_OFF
+    MediaPlayerEntityFeature.VOLUME_SET
+    | MediaPlayerEntityFeature.VOLUME_MUTE
     | MediaPlayerEntityFeature.VOLUME_STEP
+    | MediaPlayerEntityFeature.TURN_ON
+    | MediaPlayerEntityFeature.TURN_OFF
+    | MediaPlayerEntityFeature.SELECT_SOURCE
 )
 
 
@@ -90,6 +99,39 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
             MEDIA_PLAYER_DOMAIN,
             SERVICE_VOLUME_DOWN,
             {},
+            blocking=True,
+            target={ATTR_ENTITY_ID: self.get_default_zones()},
+            context=self._context,
+        )
+
+    async def async_set_volume_level(self, volume: float) -> None:
+        """Set volume level, range 0..1."""
+        await self.hass.services.async_call(
+            MEDIA_PLAYER_DOMAIN,
+            SERVICE_VOLUME_SET,
+            {ATTR_MEDIA_VOLUME_LEVEL: volume},
+            blocking=True,
+            target={ATTR_ENTITY_ID: self.get_default_zones()},
+            context=self._context,
+        )
+
+    async def async_mute_volume(self, mute: bool) -> None:
+        """Mute the volume."""
+        await self.hass.services.async_call(
+            MEDIA_PLAYER_DOMAIN,
+            SERVICE_VOLUME_MUTE,
+            {ATTR_MEDIA_VOLUME_MUTED: mute},
+            blocking=True,
+            target={ATTR_ENTITY_ID: self.get_default_zones()},
+            context=self._context,
+        )
+
+    async def async_select_source(self, source: str) -> None:
+        """Select input source."""
+        await self.hass.services.async_call(
+            MEDIA_PLAYER_DOMAIN,
+            SERVICE_SELECT_SOURCE,
+            {ATTR_INPUT_SOURCE: source},
             blocking=True,
             target={ATTR_ENTITY_ID: self.get_default_zones()},
             context=self._context,
