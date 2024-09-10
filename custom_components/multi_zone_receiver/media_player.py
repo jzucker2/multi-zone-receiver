@@ -54,6 +54,12 @@ async def async_setup_entry(
     hass.services.async_register(
         DOMAIN, "volume_down", only_receiver.handle_volume_down
     )
+    hass.services.async_register(DOMAIN, "volume_set", only_receiver.handle_volume_set)
+    hass.services.async_register(
+        DOMAIN, "volume_mute", only_receiver.handle_volume_mute
+    )
+    hass.services.async_register(DOMAIN, "turn_on", only_receiver.handle_turn_on)
+    hass.services.async_register(DOMAIN, "turn_off", only_receiver.handle_turn_off)
 
 
 class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
@@ -279,3 +285,29 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         _LOGGER.debug("handle_volume_down call: %s", call)
         zones = self._get_zone_entities(call.data)
         await self._async_volume_down(zones=zones)
+
+    async def handle_volume_set(self, call):
+        """Handle the service action call."""
+        _LOGGER.debug("handle_volume_set call: %s", call)
+        zones = self._get_zone_entities(call.data)
+        volume_level = call.data.get(ATTR_MEDIA_VOLUME_LEVEL)
+        await self._async_set_volume_level(volume_level, zones=zones)
+
+    async def handle_volume_mute(self, call):
+        """Handle the service action call."""
+        _LOGGER.debug("handle_volume_mute call: %s", call)
+        zones = self._get_zone_entities(call.data)
+        volume_mute = call.data.get(ATTR_MEDIA_VOLUME_MUTED)
+        await self._async_mute_volume(volume_mute, zones=zones)
+
+    async def handle_turn_on(self, call):
+        """Handle the service action call."""
+        _LOGGER.debug("handle_turn_on call: %s", call)
+        zones = self._get_zone_entities(call.data)
+        await self._async_turn_on(zones=zones)
+
+    async def handle_turn_off(self, call):
+        """Handle the service action call."""
+        _LOGGER.debug("handle_turn_off call: %s", call)
+        zones = self._get_zone_entities(call.data)
+        await self._async_turn_off(zones=zones)

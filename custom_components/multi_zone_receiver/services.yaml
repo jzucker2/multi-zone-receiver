@@ -23,6 +23,37 @@ toggle_volume_mute:
         text:
           multiple: true
 
+volume_mute:
+  name: Mute volume
+  description: Mute a zone's volume.
+  target:
+  fields:
+    # Key of the field
+    zones:
+      name: Zones
+      description: List of zones for action.
+      # Whether or not field is required (default = false)
+      required: false
+      # Advanced fields are only shown when the advanced mode is enabled for the user
+      # (default = false)
+      advanced: false
+      # Example value that can be passed for this field
+      example: "zone_1"
+      # The default field value
+      default: "zone_1"
+      # Selector (https://www.home-assistant.io/docs/blueprint/selectors/) to control
+      # the input UI for this field
+      selector:
+        text:
+          multiple: true
+    is_volume_muted:
+      name: Muted
+      description: True/false for mute/unmute.
+      required: true
+      example: true
+      selector:
+        boolean:
+
 volume_up:
   name: Turn up volume
   description: Turn a zone volume up.
@@ -51,6 +82,91 @@ volume_up:
 volume_down:
   name: Turn down volume
   description: Turn a zone volume down.
+  target:
+  # Different fields that your service action accepts
+  fields:
+    # Key of the field
+    zones:
+      name: Zones
+      description: List of zones for action.
+      # Whether or not field is required (default = false)
+      required: false
+      # Advanced fields are only shown when the advanced mode is enabled for the user
+      # (default = false)
+      advanced: false
+      # Example value that can be passed for this field
+      example: "zone_1"
+      # The default field value
+      default: "zone_1"
+      # Selector (https://www.home-assistant.io/docs/blueprint/selectors/) to control
+      # the input UI for this field
+      selector:
+        text:
+          multiple: true
+
+volume_set:
+  name: Set volume
+  description: Set a zone's volume level.
+  target:
+  fields:
+    # Key of the field
+    zones:
+      name: Zones
+      description: List of zones for action.
+      # Whether or not field is required (default = false)
+      required: false
+      # Advanced fields are only shown when the advanced mode is enabled for the user
+      # (default = false)
+      advanced: false
+      # Example value that can be passed for this field
+      example: "zone_1"
+      # The default field value
+      default: "zone_1"
+      # Selector (https://www.home-assistant.io/docs/blueprint/selectors/) to control
+      # the input UI for this field
+      selector:
+        text:
+          multiple: true
+    volume_level:
+      name: Level
+      description: Volume level to set as float.
+      required: true
+      example: 0.6
+      selector:
+        number:
+          min: 0
+          max: 1
+          step: 0.01
+          mode: slider
+
+turn_on:
+  name: Turn on zone
+  description: Turn a zone on
+  target:
+  # Different fields that your service action accepts
+  fields:
+    # Key of the field
+    zones:
+      name: Zones
+      description: List of zones for action.
+      # Whether or not field is required (default = false)
+      required: false
+      # Advanced fields are only shown when the advanced mode is enabled for the user
+      # (default = false)
+      advanced: false
+      # Example value that can be passed for this field
+      example: "zone_1"
+      # The default field value
+      default: "zone_1"
+      # Selector (https://www.home-assistant.io/docs/blueprint/selectors/) to control
+      # the input UI for this field
+      selector:
+        text:
+          multiple: true
+
+turn_off:
+  name: Turn off zone
+  description: Turn a zone off
   target:
   # Different fields that your service action accepts
   fields:
