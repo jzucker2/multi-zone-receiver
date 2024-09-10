@@ -75,6 +75,7 @@ async def async_setup_entry(
     hass.async_add_job(hass.config_entries.async_forward_entry_setups(entry, PLATFORMS))
 
     entry.add_update_listener(async_reload_entry)
+
     return True
 
 

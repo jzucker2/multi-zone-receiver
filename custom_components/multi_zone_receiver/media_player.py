@@ -1,5 +1,7 @@
 """Media Player platform for Multi Zone Receiver."""
 
+import logging
+
 from homeassistant.components.media_player import (
     ATTR_INPUT_SOURCE,
     ATTR_MEDIA_VOLUME_LEVEL,
@@ -21,8 +23,10 @@ from homeassistant.const import (
 )
 
 from . import MultiZoneReceiverConfigEntry
-from .const import DEFAULT_NAME, MEDIA_PLAYER
+from .const import DEFAULT_NAME, DOMAIN, MEDIA_PLAYER
 from .entity import MultiZoneReceiverEntity
+
+_LOGGER: logging.Logger = logging.getLogger(__package__)
 
 MULTI_ZONE_SUPPORTED_FEATURES = (
     MediaPlayerEntityFeature.VOLUME_SET
@@ -38,7 +42,11 @@ async def async_setup_entry(
     hass, entry: MultiZoneReceiverConfigEntry, async_add_devices
 ):
     """Setup media_player platform."""
-    async_add_devices([MultiZoneReceiverMediaPlayer(entry)])
+    only_receiver = MultiZoneReceiverMediaPlayer(entry)
+    async_add_devices([only_receiver])
+    hass.services.async_register(
+        DOMAIN, "toggle_volume_mute", only_receiver.handle_toggle_volume_mute
+    )
 
 
 class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
@@ -136,3 +144,8 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
             target={ATTR_ENTITY_ID: self.get_default_zones()},
             context=self._context,
         )
+
+    async def handle_toggle_mute(self, call):
+        """Handle the service action call."""
+        _LOGGER.debug("handle_toggle_mute call: %s", call)
+        await self.async_mute_volume(True)
