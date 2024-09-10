@@ -112,7 +112,12 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
     async def async_turn_on(self) -> None:
         """Turn on media player."""
         # FIXME: check entity values instead of pausing
+        on_count = 0
         for entity in self.default_zones:
+            sleep_time = 2
+            if on_count == 0:
+                sleep_time = 0
+            await asyncio.sleep(sleep_time)
             await self.hass.services.async_call(
                 MEDIA_PLAYER_DOMAIN,
                 SERVICE_TURN_ON,
@@ -121,7 +126,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
                 target={ATTR_ENTITY_ID: entity},
                 context=self._context,
             )
-            await asyncio.sleep(1)
+            on_count += 1
 
     async def async_turn_off(self) -> None:
         """Turn off media player."""
