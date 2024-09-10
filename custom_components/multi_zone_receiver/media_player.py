@@ -83,12 +83,12 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         state = self.hass.states.get(self.main_zone_entity)
         return state
 
-    @property
-    def is_volume_muted(self) -> bool:
-        """Return boolean if volume is currently muted."""
-        state = self.hass.states.get(self.main_zone_entity)
-        muted = state.attributes[ATTR_MEDIA_VOLUME_MUTED]
-        return muted
+    # @property
+    # def is_volume_muted(self) -> bool:
+    #     """Return boolean if volume is currently muted."""
+    #     state = self.hass.states.get(self.main_zone_entity)
+    #     muted = state.attributes[ATTR_MEDIA_VOLUME_MUTED]
+    #     return muted
 
     # @property
     # def volume_level(self) -> float | None:
