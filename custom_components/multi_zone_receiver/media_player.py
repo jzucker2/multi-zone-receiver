@@ -252,7 +252,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
 
     def _get_zone_entities(self, call_data):
         # TODO: handle default better
-        zones = call_data.get(ATTR_ZONES, DEFAULT_ZONE)
+        zones = call_data.get(ATTR_ZONES, list(DEFAULT_ZONE))
         final_zones = []
         for zone in zones:
             zone_entity = self.zones[zone]
