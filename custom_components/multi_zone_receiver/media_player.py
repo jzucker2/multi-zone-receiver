@@ -28,7 +28,6 @@ from .const import DEFAULT_NAME, DOMAIN, MEDIA_PLAYER
 from .entity import MultiZoneReceiverEntity
 
 ATTR_ZONES = "zones"
-DEFAULT_ZONE = "zone_1"
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
 
@@ -77,6 +76,10 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
 
     def get_zones(self):
         return self.runtime_data.zones
+
+    @property
+    def zone_names(self):
+        return self.get_zones().keys()
 
     @property
     def zones(self):
@@ -252,7 +255,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
 
     def _get_zone_entities(self, call_data):
         # TODO: handle default better
-        zones = call_data.get(ATTR_ZONES, list(DEFAULT_ZONE))
+        zones = call_data.get(ATTR_ZONES, self.zone_names)
         final_zones = []
         for zone in zones:
             zone_entity = self.zones[zone]
