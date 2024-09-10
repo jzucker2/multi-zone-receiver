@@ -275,4 +275,4 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         """Handle the service action call."""
         _LOGGER.debug("handle_volume_down call: %s", call)
         zones = self._get_zone_entities(call.data)
-        await self._async_volume_up(zones=zones)
+        await self._async_volume_down(zones=zones)
