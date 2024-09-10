@@ -7,6 +7,7 @@ toggle_volume_mute:
     # Key of the field
     zones:
       name: Zones
+      description: List of zones for action.
       # Whether or not field is required (default = false)
       required: false
       # Advanced fields are only shown when the advanced mode is enabled for the user
@@ -31,6 +32,7 @@ volume_up:
     # Key of the field
     zones:
       name: Zones
+      description: List of zones for action.
       # Whether or not field is required (default = false)
       required: false
       # Advanced fields are only shown when the advanced mode is enabled for the user
@@ -55,6 +57,7 @@ volume_down:
     # Key of the field
     zones:
       name: Zones
+      description: List of zones for action.
       # Whether or not field is required (default = false)
       required: false
       # Advanced fields are only shown when the advanced mode is enabled for the user
