@@ -92,8 +92,6 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
     @property
     def volume_level(self) -> float | None:
         """Volume level of the media player (0..1)."""
-        # Volume is sent in a format like -50.0. Minimum is -80.0,
-        # maximum is 18.0
         state = self.hass.states.get(self.main_zone_entity)
         volume_level = state.attributes[ATTR_MEDIA_VOLUME_LEVEL]
         return volume_level
