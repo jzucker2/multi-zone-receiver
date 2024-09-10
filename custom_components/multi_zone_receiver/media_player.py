@@ -90,12 +90,12 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         muted = state.attributes[ATTR_MEDIA_VOLUME_MUTED]
         return muted
 
-    @property
-    def volume_level(self) -> float | None:
-        """Volume level of the media player (0..1)."""
-        state = self.hass.states.get(self.main_zone_entity)
-        volume_level = state.attributes[ATTR_MEDIA_VOLUME_LEVEL]
-        return volume_level
+    # @property
+    # def volume_level(self) -> float | None:
+    #     """Volume level of the media player (0..1)."""
+    #     state = self.hass.states.get(self.main_zone_entity)
+    #     volume_level = state.attributes[ATTR_MEDIA_VOLUME_LEVEL]
+    #     return volume_level
 
     @property
     def source(self) -> str | None:
