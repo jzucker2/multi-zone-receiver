@@ -6,14 +6,50 @@ https://github.com/jzucker2/multi-zone-receiver
 """
 
 import asyncio
+from dataclasses import dataclass
 import logging
+from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import CONF_NAME
 from homeassistant.core import Config, HomeAssistant
 
-from .const import DOMAIN, PLATFORMS, STARTUP_MESSAGE
+from .const import (
+    CONF_ZONE_1,
+    CONF_ZONE_2,
+    CONF_ZONE_3,
+    DOMAIN,
+    PLATFORMS,
+    STARTUP_MESSAGE,
+)
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
+
+# The type alias needs to be suffixed with 'ConfigEntry'
+type MultiZoneReceiverConfigEntry = ConfigEntry[MultiZoneReceiverData]
+
+
+@dataclass
+class MultiZoneReceiverData:
+    name: str
+    zones: dict[str, Any]
+
+    @classmethod
+    def from_entry(cls, entry):
+        name = entry.data.get(CONF_NAME)
+        zone_1 = entry.data.get(CONF_ZONE_1)
+        zone_2 = entry.data.get(CONF_ZONE_2)
+        zone_3 = entry.data.get(CONF_ZONE_3)
+        zones_dict = {
+            CONF_ZONE_1: zone_1,
+            CONF_ZONE_2: zone_2,
+            CONF_ZONE_3: zone_3,
+        }
+        return cls(name, zones=zones_dict)
+
+    @property
+    def get_all_zones(self):
+        return list(self.zones.values())
 
 
 async def async_setup(hass: HomeAssistant, config: Config):
@@ -21,11 +57,17 @@ async def async_setup(hass: HomeAssistant, config: Config):
     return True
 
 
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
+async def async_setup_entry(
+    hass: HomeAssistant,
+    entry: MultiZoneReceiverConfigEntry,
+):
     """Set up this integration using UI."""
     if hass.data.get(DOMAIN) is None:
         hass.data.setdefault(DOMAIN, {})
         _LOGGER.info(STARTUP_MESSAGE)
+
+    # Assign the runtime_data
+    entry.runtime_data = MultiZoneReceiverData.from_entry(entry)
 
     # https://developers.home-assistant.io/blog/2024/03/13/deprecate_add_run_job
     hass.async_add_job(hass.config_entries.async_forward_entry_setups(entry, PLATFORMS))

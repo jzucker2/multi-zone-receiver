@@ -1,10 +1,13 @@
 """Sensor platform for Multi Zone Receiver."""
 
+from . import MultiZoneReceiverConfigEntry
 from .const import DEFAULT_NAME, ICON, SENSOR
 from .entity import MultiZoneReceiverEntity
 
 
-async def async_setup_entry(hass, entry, async_add_devices):
+async def async_setup_entry(
+    hass, entry: MultiZoneReceiverConfigEntry, async_add_devices
+):
     """Setup sensor platform."""
     async_add_devices([MultiZoneReceiverSensor(entry)])
 

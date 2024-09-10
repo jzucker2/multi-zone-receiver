@@ -14,6 +14,10 @@ class MultiZoneReceiverEntity(Entity):
         self.config_entry = config_entry
 
     @property
+    def runtime_data(self):
+        return self.config_entry.runtime_data
+
+    @property
     def config_entry_id(self):
         return self.config_entry.entry_id
 
