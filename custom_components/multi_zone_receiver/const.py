@@ -4,7 +4,7 @@
 NAME = "Multi Zone Receiver"
 DOMAIN = "multi_zone_receiver"
 DOMAIN_DATA = f"{DOMAIN}_data"
-VERSION = "0.5.7"
+VERSION = "0.5.8"
 
 ATTRIBUTION = "Data provided by http://jsonplaceholder.typicode.com/"
 ISSUE_URL = "https://github.com/jzucker2/multi-zone-receiver/issues"
