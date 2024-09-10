@@ -1,7 +1,10 @@
 """Media Player platform for Multi Zone Receiver."""
 
+import logging
+
 from homeassistant.components.media_player import (
     ATTR_INPUT_SOURCE,
+    ATTR_INPUT_SOURCE_LIST,
     ATTR_MEDIA_VOLUME_LEVEL,
     ATTR_MEDIA_VOLUME_MUTED,
     DOMAIN as MEDIA_PLAYER_DOMAIN,
@@ -9,6 +12,7 @@ from homeassistant.components.media_player import (
     MediaPlayerDeviceClass,
     MediaPlayerEntity,
     MediaPlayerEntityFeature,
+    MediaPlayerState,
 )
 from homeassistant.const import (
     ATTR_ENTITY_ID,
@@ -21,8 +25,10 @@ from homeassistant.const import (
 )
 
 from . import MultiZoneReceiverConfigEntry
-from .const import DEFAULT_NAME, MEDIA_PLAYER
+from .const import DEFAULT_NAME, DOMAIN, MEDIA_PLAYER
 from .entity import MultiZoneReceiverEntity
+
+_LOGGER: logging.Logger = logging.getLogger(__package__)
 
 MULTI_ZONE_SUPPORTED_FEATURES = (
     MediaPlayerEntityFeature.VOLUME_SET
@@ -38,7 +44,11 @@ async def async_setup_entry(
     hass, entry: MultiZoneReceiverConfigEntry, async_add_devices
 ):
     """Setup media_player platform."""
-    async_add_devices([MultiZoneReceiverMediaPlayer(entry)])
+    only_receiver = MultiZoneReceiverMediaPlayer(entry)
+    async_add_devices([only_receiver])
+    hass.services.async_register(
+        DOMAIN, "toggle_volume_mute", only_receiver.handle_toggle_volume_mute
+    )
 
 
 class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
@@ -52,13 +62,52 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         """Return the name of the media_player."""
         return f"{DEFAULT_NAME}_{MEDIA_PLAYER}"
 
-    # @property
-    # def device_class(self):
-    #     """Return the device class of the sensor."""
-    #     return "multi_zone_receiver__custom_media_player_device_class"
+    def get_main_zone(self):
+        return self.runtime_data.get_main_zone()
+
+    @property
+    def main_zone_entity(self):
+        return self.get_main_zone()
 
     def get_default_zones(self):
         return self.runtime_data.get_all_zones()
+
+    @property
+    def default_zones(self):
+        return self.get_default_zones()
+
+    @property
+    def state(self) -> MediaPlayerState | None:
+        """Return the state of the device."""
+        state = self.hass.states.get(self.main_zone_entity)
+        return state
+
+    @property
+    def is_volume_muted(self) -> bool:
+        """Return boolean if volume is currently muted."""
+        state = self.hass.states.get(self.main_zone_entity)
+        muted = state.attributes[ATTR_MEDIA_VOLUME_MUTED]
+        return muted
+
+    @property
+    def volume_level(self) -> float | None:
+        """Volume level of the media player (0..1)."""
+        state = self.hass.states.get(self.main_zone_entity)
+        volume_level = state.attributes[ATTR_MEDIA_VOLUME_LEVEL]
+        return volume_level
+
+    @property
+    def source(self) -> str | None:
+        """Return the current input source."""
+        state = self.hass.states.get(self.main_zone_entity)
+        input_source = state.attributes[ATTR_INPUT_SOURCE]
+        return input_source
+
+    def source_list(self) -> list[str] | None:
+        """List of available input sources."""
+        state = self.hass.states.get(self.main_zone_entity)
+        input_source_list = state.attributes[ATTR_INPUT_SOURCE_LIST]
+        return input_source_list
 
     async def async_turn_on(self) -> None:
         """Turn on media player."""
@@ -67,7 +116,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
             SERVICE_TURN_ON,
             {},
             blocking=True,
-            target={ATTR_ENTITY_ID: self.get_default_zones()},
+            target={ATTR_ENTITY_ID: self.default_zones},
             context=self._context,
         )
 
@@ -78,7 +127,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
             SERVICE_TURN_OFF,
             {},
             blocking=True,
-            target={ATTR_ENTITY_ID: self.get_default_zones()},
+            target={ATTR_ENTITY_ID: self.default_zones},
             context=self._context,
         )
 
@@ -89,7 +138,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
             SERVICE_VOLUME_UP,
             {},
             blocking=True,
-            target={ATTR_ENTITY_ID: self.get_default_zones()},
+            target={ATTR_ENTITY_ID: self.default_zones},
             context=self._context,
         )
 
@@ -100,7 +149,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
             SERVICE_VOLUME_DOWN,
             {},
             blocking=True,
-            target={ATTR_ENTITY_ID: self.get_default_zones()},
+            target={ATTR_ENTITY_ID: self.default_zones},
             context=self._context,
         )
 
@@ -111,7 +160,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
             SERVICE_VOLUME_SET,
             {ATTR_MEDIA_VOLUME_LEVEL: volume},
             blocking=True,
-            target={ATTR_ENTITY_ID: self.get_default_zones()},
+            target={ATTR_ENTITY_ID: self.default_zones},
             context=self._context,
         )
 
@@ -122,7 +171,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
             SERVICE_VOLUME_MUTE,
             {ATTR_MEDIA_VOLUME_MUTED: mute},
             blocking=True,
-            target={ATTR_ENTITY_ID: self.get_default_zones()},
+            target={ATTR_ENTITY_ID: self.default_zones},
             context=self._context,
         )
 
@@ -133,6 +182,11 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
             SERVICE_SELECT_SOURCE,
             {ATTR_INPUT_SOURCE: source},
             blocking=True,
-            target={ATTR_ENTITY_ID: self.get_default_zones()},
+            target={ATTR_ENTITY_ID: self.default_zones},
             context=self._context,
         )
+
+    async def handle_toggle_mute(self, call):
+        """Handle the service action call."""
+        _LOGGER.debug("handle_toggle_mute call: %s", call)
+        await self.async_mute_volume(True)

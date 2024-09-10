@@ -1,0 +1,4 @@
+toggle_volume_mute:
+  name: Toggle mute volume
+  description: Toggle to mute/unmute a zone's volume.
+  target:
