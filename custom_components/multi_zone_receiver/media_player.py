@@ -48,7 +48,7 @@ async def async_setup_entry(
     only_receiver = MultiZoneReceiverMediaPlayer(entry)
     async_add_devices([only_receiver])
     hass.services.async_register(
-        DOMAIN, "toggle_volume_mute", only_receiver.handle_toggle_volume_mute
+        DOMAIN, "toggle_volume_mute", only_receiver.handle_toggle_mute
     )
 
 
