@@ -48,7 +48,6 @@ class MultiZoneReceiverData:
         }
         return cls(name=name, zones=zones_dict)
 
-    @property
     def get_all_zones(self):
         return list(self.zones.values())
 
