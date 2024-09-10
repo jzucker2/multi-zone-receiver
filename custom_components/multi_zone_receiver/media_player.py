@@ -12,7 +12,6 @@ from homeassistant.components.media_player import (
     MediaPlayerDeviceClass,
     MediaPlayerEntity,
     MediaPlayerEntityFeature,
-    MediaPlayerState,
 )
 from homeassistant.const import (
     ATTR_ENTITY_ID,
@@ -76,11 +75,11 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
     def default_zones(self):
         return self.get_default_zones()
 
-    @property
-    def state(self) -> MediaPlayerState | None:
-        """Return the state of the device."""
-        state = self.hass.states.get(self.main_zone_entity)
-        return state
+    # @property
+    # def state(self) -> MediaPlayerState | None:
+    #     """Return the state of the device."""
+    #     state = self.hass.states.get(self.main_zone_entity)
+    #     return state
 
     # @property
     # def is_volume_muted(self) -> bool:
