@@ -4,6 +4,7 @@ from homeassistant.components.media_player import (
     DOMAIN as MEDIA_PLAYER_DOMAIN,
     MediaPlayerDeviceClass,
     MediaPlayerEntity,
+    MediaPlayerEntityFeature,
 )
 from homeassistant.const import (
     ATTR_ENTITY_ID,
@@ -17,6 +18,12 @@ from . import MultiZoneReceiverConfigEntry
 from .const import DEFAULT_NAME, MEDIA_PLAYER
 from .entity import MultiZoneReceiverEntity
 
+MULTI_ZONE_SUPPORTED_FEATURES = (
+    MediaPlayerEntityFeature.TURN_ON
+    | MediaPlayerEntityFeature.TURN_OFF
+    | MediaPlayerEntityFeature.VOLUME_STEP
+)
+
 
 async def async_setup_entry(
     hass, entry: MultiZoneReceiverConfigEntry, async_add_devices
@@ -29,6 +36,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
     """multi_zone_receiver media_player class. Based on https://github.com/home-assistant/core/blob/dev/homeassistant/components/media_player/__init__.py"""
 
     _attr_device_class = MediaPlayerDeviceClass.RECEIVER
+    _attr_supported_features = MULTI_ZONE_SUPPORTED_FEATURES
 
     @property
     def name(self):
