@@ -36,7 +36,9 @@ class MultiZoneReceiverData:
 
     @classmethod
     def from_entry(cls, entry):
-        _LOGGER.debug("Processing data config entry: %s", entry)
+        _LOGGER.debug(
+            "Processing data config entry: %s with entry.data: %s", entry, entry.data
+        )
         name = entry.data.get(CONF_NAME)
         zone_1 = entry.data.get(CONF_ZONE_1)
         zone_2 = entry.data.get(CONF_ZONE_2)
