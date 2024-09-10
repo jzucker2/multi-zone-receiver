@@ -5,6 +5,7 @@ import logging
 
 from homeassistant.components.media_player import (
     ATTR_INPUT_SOURCE,
+    ATTR_INPUT_SOURCE_LIST,
     ATTR_MEDIA_VOLUME_LEVEL,
     ATTR_MEDIA_VOLUME_MUTED,
     DOMAIN as MEDIA_PLAYER_DOMAIN,
@@ -103,11 +104,12 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         input_source = state.attributes[ATTR_INPUT_SOURCE]
         return input_source
 
-    # def source_list(self) -> list[str] | None:
-    #     """List of available input sources."""
-    #     state = self.hass.states.get(self.main_zone_entity)
-    #     input_source_list = state.attributes[ATTR_INPUT_SOURCE_LIST]
-    #     return input_source_list
+    @property
+    def source_list(self) -> list[str] | None:
+        """List of available input sources."""
+        state = self.hass.states.get(self.main_zone_entity)
+        input_source_list = state.attributes[ATTR_INPUT_SOURCE_LIST]
+        return input_source_list
 
     async def async_turn_on(self) -> None:
         """Turn on media player."""
