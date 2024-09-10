@@ -60,6 +60,9 @@ async def async_setup_entry(
     )
     hass.services.async_register(DOMAIN, "turn_on", only_receiver.handle_turn_on)
     hass.services.async_register(DOMAIN, "turn_off", only_receiver.handle_turn_off)
+    hass.services.async_register(
+        DOMAIN, "toggle_power", only_receiver.handle_toggle_power
+    )
 
 
 class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
@@ -270,6 +273,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
 
     async def handle_toggle_mute(self, call):
         """Handle the service action call."""
+        # FIXME: this doesn't actually work yet
         _LOGGER.debug("handle_toggle_mute call: %s", call)
         zones = self._get_zone_entities(call.data)
         await self._async_mute_volume(True, zones=zones)
@@ -299,6 +303,13 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         zones = self._get_zone_entities(call.data)
         volume_mute = call.data.get(ATTR_MEDIA_VOLUME_MUTED)
         await self._async_mute_volume(volume_mute, zones=zones)
+
+    async def handle_toggle_power(self, call):
+        """Handle the service action call."""
+        # FIXME: this doesn't actually work yet
+        _LOGGER.debug("handle_toggle_power call: %s", call)
+        zones = self._get_zone_entities(call.data)
+        await self._async_mute_volume(True, zones=zones)
 
     async def handle_turn_on(self, call):
         """Handle the service action call."""

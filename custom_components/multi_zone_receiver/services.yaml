@@ -188,3 +188,28 @@ turn_off:
       selector:
         text:
           multiple: true
+
+toggle_power:
+  name: Toggle zone power
+  description: Toggle to flip the zone power on or off
+  target:
+  # Different fields that your service action accepts
+  fields:
+    # Key of the field
+    zones:
+      name: Zones
+      description: List of zones for action.
+      # Whether or not field is required (default = false)
+      required: false
+      # Advanced fields are only shown when the advanced mode is enabled for the user
+      # (default = false)
+      advanced: false
+      # Example value that can be passed for this field
+      example: "zone_1"
+      # The default field value
+      default: "zone_1"
+      # Selector (https://www.home-assistant.io/docs/blueprint/selectors/) to control
+      # the input UI for this field
+      selector:
+        text:
+          multiple: true
