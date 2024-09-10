@@ -21,6 +21,12 @@ SENSOR = "sensor"
 MEDIA_PLAYER = "media_player"
 PLATFORMS = [BINARY_SENSOR, SENSOR, MEDIA_PLAYER]
 
+# Services
+SERVICE_TOGGLE_VOLUME_MUTE = "toggle_volume_mute"
+SERVICE_TOGGLE_POWER = "toggle_power"
+
+# Input Keys
+ATTR_ZONES = "zones"
 
 # Configuration and options
 CONF_ENABLED = "enabled"

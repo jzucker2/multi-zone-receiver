@@ -24,10 +24,15 @@ from homeassistant.const import (
 )
 
 from . import MultiZoneReceiverConfigEntry
-from .const import DEFAULT_NAME, DOMAIN, MEDIA_PLAYER
+from .const import (
+    ATTR_ZONES,
+    DEFAULT_NAME,
+    DOMAIN,
+    MEDIA_PLAYER,
+    SERVICE_TOGGLE_POWER,
+    SERVICE_TOGGLE_VOLUME_MUTE,
+)
 from .entity import MultiZoneReceiverEntity
-
-ATTR_ZONES = "zones"
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
 
@@ -48,20 +53,26 @@ async def async_setup_entry(
     only_receiver = MultiZoneReceiverMediaPlayer(entry)
     async_add_devices([only_receiver])
     hass.services.async_register(
-        DOMAIN, "toggle_volume_mute", only_receiver.handle_toggle_mute
+        DOMAIN, SERVICE_TOGGLE_VOLUME_MUTE, only_receiver.handle_toggle_mute
     )
-    hass.services.async_register(DOMAIN, "volume_up", only_receiver.handle_volume_up)
     hass.services.async_register(
-        DOMAIN, "volume_down", only_receiver.handle_volume_down
+        DOMAIN, SERVICE_VOLUME_UP, only_receiver.handle_volume_up
     )
-    hass.services.async_register(DOMAIN, "volume_set", only_receiver.handle_volume_set)
     hass.services.async_register(
-        DOMAIN, "volume_mute", only_receiver.handle_volume_mute
+        DOMAIN, SERVICE_VOLUME_DOWN, only_receiver.handle_volume_down
     )
-    hass.services.async_register(DOMAIN, "turn_on", only_receiver.handle_turn_on)
-    hass.services.async_register(DOMAIN, "turn_off", only_receiver.handle_turn_off)
     hass.services.async_register(
-        DOMAIN, "toggle_power", only_receiver.handle_toggle_power
+        DOMAIN, SERVICE_VOLUME_SET, only_receiver.handle_volume_set
+    )
+    hass.services.async_register(
+        DOMAIN, SERVICE_VOLUME_MUTE, only_receiver.handle_volume_mute
+    )
+    hass.services.async_register(DOMAIN, SERVICE_TURN_ON, only_receiver.handle_turn_on)
+    hass.services.async_register(
+        DOMAIN, SERVICE_TURN_OFF, only_receiver.handle_turn_off
+    )
+    hass.services.async_register(
+        DOMAIN, SERVICE_TOGGLE_POWER, only_receiver.handle_toggle_power
     )
 
 
