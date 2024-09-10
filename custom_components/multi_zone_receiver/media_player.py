@@ -27,6 +27,9 @@ from . import MultiZoneReceiverConfigEntry
 from .const import DEFAULT_NAME, DOMAIN, MEDIA_PLAYER
 from .entity import MultiZoneReceiverEntity
 
+ATTR_ZONES = "zones"
+DEFAULT_ZONE = "zone_1"
+
 _LOGGER: logging.Logger = logging.getLogger(__package__)
 
 MULTI_ZONE_SUPPORTED_FEATURES = (
@@ -48,6 +51,10 @@ async def async_setup_entry(
     hass.services.async_register(
         DOMAIN, "toggle_volume_mute", only_receiver.handle_toggle_mute
     )
+    hass.services.async_register(DOMAIN, "volume_up", only_receiver.handle_volume_up)
+    hass.services.async_register(
+        DOMAIN, "volume_down", only_receiver.handle_volume_down
+    )
 
 
 class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
@@ -67,6 +74,13 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
     @property
     def main_zone_entity(self):
         return self.get_main_zone()
+
+    def get_zones(self):
+        return self.runtime_data.zones
+
+    @property
+    def zones(self):
+        return self.get_zones()
 
     def get_default_zones(self):
         return self.runtime_data.get_all_zones()
@@ -109,11 +123,13 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
     #     input_source_list = state.attributes[ATTR_INPUT_SOURCE_LIST]
     #     return input_source_list
 
-    async def async_turn_on(self) -> None:
+    async def _async_turn_on(self, zones=None) -> None:
         """Turn on media player."""
+        if not zones:
+            zones = self.default_zones
         # FIXME: check entity values instead of pausing
         on_count = 0
-        for entity in self.default_zones:
+        for entity in zones:
             sleep_time = 2
             if on_count == 0:
                 sleep_time = 0
@@ -128,73 +144,135 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
             )
             on_count += 1
 
-    async def async_turn_off(self) -> None:
+    async def async_turn_on(self) -> None:
+        """Turn on media player."""
+        await self._async_turn_on(zones=self.default_zones)
+
+    async def _async_turn_off(self, zones=None) -> None:
         """Turn off media player."""
+        if not zones:
+            zones = self.default_zones
         await self.hass.services.async_call(
             MEDIA_PLAYER_DOMAIN,
             SERVICE_TURN_OFF,
             {},
             blocking=True,
-            target={ATTR_ENTITY_ID: self.default_zones},
+            target={ATTR_ENTITY_ID: zones},
             context=self._context,
         )
 
-    async def async_volume_up(self) -> None:
+    async def async_turn_off(self) -> None:
+        """Turn off media player."""
+        await self._async_turn_off(zones=self.default_zones)
+
+    async def _async_volume_up(self, zones=None) -> None:
         """Volume up the media player."""
+        if not zones:
+            zones = self.default_zones
         await self.hass.services.async_call(
             MEDIA_PLAYER_DOMAIN,
             SERVICE_VOLUME_UP,
             {},
             blocking=True,
-            target={ATTR_ENTITY_ID: self.default_zones},
+            target={ATTR_ENTITY_ID: zones},
             context=self._context,
         )
 
-    async def async_volume_down(self) -> None:
+    async def async_volume_up(self) -> None:
+        """Volume up the media player."""
+        await self._async_volume_up(zones=self.default_zones)
+
+    async def _async_volume_down(self, zones=None) -> None:
         """Volume down the media player."""
+        if not zones:
+            zones = self.default_zones
         await self.hass.services.async_call(
             MEDIA_PLAYER_DOMAIN,
             SERVICE_VOLUME_DOWN,
             {},
             blocking=True,
-            target={ATTR_ENTITY_ID: self.default_zones},
+            target={ATTR_ENTITY_ID: zones},
             context=self._context,
         )
 
-    async def async_set_volume_level(self, volume: float) -> None:
+    async def async_volume_down(self) -> None:
+        """Volume down the media player."""
+        await self._async_volume_down(zones=self.default_zones)
+
+    async def _async_set_volume_level(self, volume: float, zones=None) -> None:
         """Set volume level, range 0..1."""
+        if not zones:
+            zones = self.default_zones
         await self.hass.services.async_call(
             MEDIA_PLAYER_DOMAIN,
             SERVICE_VOLUME_SET,
             {ATTR_MEDIA_VOLUME_LEVEL: volume},
             blocking=True,
-            target={ATTR_ENTITY_ID: self.default_zones},
+            target={ATTR_ENTITY_ID: zones},
             context=self._context,
         )
 
-    async def async_mute_volume(self, mute: bool) -> None:
+    async def async_set_volume_level(self, volume: float) -> None:
+        """Set volume level, range 0..1."""
+        await self._async_set_volume_level(volume, zones=self.default_zones)
+
+    async def _async_mute_volume(self, mute: bool, zones=None) -> None:
         """Mute the volume."""
+        if not zones:
+            zones = self.default_zones
         await self.hass.services.async_call(
             MEDIA_PLAYER_DOMAIN,
             SERVICE_VOLUME_MUTE,
             {ATTR_MEDIA_VOLUME_MUTED: mute},
             blocking=True,
-            target={ATTR_ENTITY_ID: self.default_zones},
+            target={ATTR_ENTITY_ID: zones},
             context=self._context,
         )
 
-    async def async_select_source(self, source: str) -> None:
+    async def async_mute_volume(self, mute: bool) -> None:
+        """Mute the volume."""
+        await self._async_mute_volume(mute, zones=self.default_zones)
+
+    async def _async_select_source(self, source: str, zones=None) -> None:
         """Select input source."""
+        if not zones:
+            zones = self.default_zones
         await self.hass.services.async_call(
             MEDIA_PLAYER_DOMAIN,
             SERVICE_SELECT_SOURCE,
             {ATTR_INPUT_SOURCE: source},
             blocking=True,
-            target={ATTR_ENTITY_ID: self.default_zones},
+            target={ATTR_ENTITY_ID: zones},
             context=self._context,
         )
+
+    async def async_select_source(self, source: str) -> None:
+        """Select input source."""
+        await self._async_select_source(source, zones=self.default_zones)
+
+    def _get_zone_entities(self, call_data):
+        # TODO: handle default better
+        zones = call_data.get(ATTR_ZONES, DEFAULT_ZONE)
+        final_zones = []
+        for zone in zones:
+            zone_entity = self.zones[zone]
+            final_zones.append(zone_entity)
+        return list(final_zones)
 
     async def handle_toggle_mute(self, call):
         """Handle the service action call."""
         _LOGGER.debug("handle_toggle_mute call: %s", call)
-        await self.async_mute_volume(True)
+        zones = self._get_zone_entities(call.data)
+        await self._async_mute_volume(True, zones=zones)
+
+    async def handle_volume_up(self, call):
+        """Handle the service action call."""
+        _LOGGER.debug("handle_volume_up call: %s", call)
+        zones = self._get_zone_entities(call.data)
+        await self._async_volume_up(zones=zones)
+
+    async def handle_volume_down(self, call):
+        """Handle the service action call."""
+        _LOGGER.debug("handle_volume_down call: %s", call)
+        zones = self._get_zone_entities(call.data)
+        await self._async_volume_down(zones=zones)
