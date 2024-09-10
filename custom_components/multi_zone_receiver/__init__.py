@@ -35,7 +35,7 @@ class MultiZoneReceiverData:
     zones: dict[str, Any]
 
     @classmethod
-    def from_entry(cls, entry):
+    def from_entry(cls, entry: MultiZoneReceiverConfigEntry):
         _LOGGER.debug(
             "Processing data config entry: %s with entry.data: %s", entry, entry.data
         )
