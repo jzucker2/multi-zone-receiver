@@ -36,6 +36,7 @@ class MultiZoneReceiverData:
 
     @classmethod
     def from_entry(cls, entry):
+        _LOGGER.debug("Processing data config entry: %s", entry)
         name = entry.data.get(CONF_NAME)
         zone_1 = entry.data.get(CONF_ZONE_1)
         zone_2 = entry.data.get(CONF_ZONE_2)
@@ -45,7 +46,7 @@ class MultiZoneReceiverData:
             CONF_ZONE_2: zone_2,
             CONF_ZONE_3: zone_3,
         }
-        return cls(name, zones=zones_dict)
+        return cls(name=name, zones=zones_dict)
 
     @property
     def get_all_zones(self):
