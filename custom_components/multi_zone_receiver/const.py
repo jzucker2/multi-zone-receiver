@@ -27,6 +27,9 @@ SERVICE_TOGGLE_POWER = "toggle_power"
 
 # Input Keys
 ATTR_ZONES = "zones"
+ATTR_ACTIVE = "active"
+ATTR_AVAILABLE = "available"
+ATTR_DEFAULT = "default"
 
 # Configuration and options
 CONF_ENABLED = "enabled"
