@@ -124,15 +124,15 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         entity = event.data.get("entity_id")
         _LOGGER.debug("New state from '%s': '%s'", entity, str(new_state))
 
-        zone = self._zones[entity]
+        # zone = self._zones[entity]
 
         # if new_state.state is None:
         #     self._update_zones(zone, False)
         #     self.async_write_ha_state()
         #     return
 
-        self._update_zones(zone, new_state.state in self.updateable_states)
-        self.async_write_ha_state()
+        # self._update_zones(zone, new_state.state in self.updateable_states)
+        # self.async_write_ha_state()
 
     @property
     def name(self):
