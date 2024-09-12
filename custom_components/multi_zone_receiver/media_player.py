@@ -137,6 +137,8 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
     def state(self) -> MediaPlayerState | None:
         """Return the state of the device."""
         state = self.hass.states.get(self.main_zone_entity)
+        if not state:
+            return state
         return state.state
 
     # @property
