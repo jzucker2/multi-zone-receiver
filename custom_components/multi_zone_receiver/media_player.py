@@ -1,7 +1,9 @@
 """Media Player platform for Multi Zone Receiver."""
 
 import asyncio
+from collections.abc import Mapping
 import logging
+from typing import Any
 
 from homeassistant.components.media_player import (
     ATTR_INPUT_SOURCE,
@@ -22,7 +24,13 @@ from homeassistant.const import (
     SERVICE_VOLUME_MUTE,
     SERVICE_VOLUME_SET,
     SERVICE_VOLUME_UP,
+    STATE_IDLE,
+    STATE_OFF,
+    STATE_ON,
+    STATE_PLAYING,
 )
+from homeassistant.core import Event, EventStateChangedData, callback
+from homeassistant.helpers.event import async_track_state_change_event
 
 from . import MultiZoneReceiverConfigEntry
 from .const import (
@@ -86,6 +94,46 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
     _attr_device_class = MediaPlayerDeviceClass.RECEIVER
     _attr_supported_features = MULTI_ZONE_SUPPORTED_FEATURES
 
+    async def async_added_to_hass(self) -> None:
+        """Entity has been added to hass."""
+        self.async_on_remove(
+            async_track_state_change_event(
+                self.hass,
+                self.get_all_zones(),
+                self.async_update_media_player_state_callback,
+            )
+        )
+
+    @property
+    def updateable_states(self):
+        return list(
+            [
+                STATE_ON,
+                STATE_OFF,
+                STATE_PLAYING,
+                STATE_IDLE,
+            ]
+        )
+
+    @callback
+    def async_update_media_player_state_callback(
+        self, event: Event[EventStateChangedData]
+    ) -> None:
+        """Handle media_player state changes."""
+        new_state = event.data.get("new_state")
+        entity = event.data.get("entity_id")
+        _LOGGER.debug("New state from '%s': '%s'", entity, str(new_state))
+
+        zone = self._zones[entity]
+
+        # if new_state.state is None:
+        #     self._update_zones(zone, False)
+        #     self.async_write_ha_state()
+        #     return
+
+        self._update_zones(zone, new_state.state in self.updateable_states)
+        self.async_write_ha_state()
+
     @property
     def name(self):
         """Return the name of the media_player."""
@@ -119,7 +167,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
     def default_zones(self):
         return self.get_default_zones()
 
-    def _get_extra_state_attributes(self):
+    def _get_extra_state_attributes(self) -> Mapping[str, Any] | None:
         final_dict = {
             ATTR_ENTITY_ID: self.get_all_zones(),
             ATTR_ACTIVE: self.get_default_zones(),
@@ -129,7 +177,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         return dict(final_dict)
 
     @property
-    def extra_state_attributes(self):
+    def extra_state_attributes(self) -> Mapping[str, Any] | None:
         """Return the state attributes of the sensor."""
         return self._get_extra_state_attributes()
 

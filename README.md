@@ -105,3 +105,5 @@ Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [in
 - https://developers.home-assistant.io/blog/2024/08/05/coordinator_async_setup/
 - https://developers.home-assistant.io/blog/2024/05/01/improved-hass-data-typing
 - https://github.com/home-assistant/core/blob/dev/homeassistant/components/ecowitt/entity.py
+- https://developers.home-assistant.io/docs/asyncio_thread_safety/
+  - This covers adding and removing and callbacks
