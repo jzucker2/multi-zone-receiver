@@ -7,6 +7,7 @@ from typing import Any
 
 from homeassistant.components.media_player import (
     ATTR_INPUT_SOURCE,
+    ATTR_INPUT_SOURCE_LIST,
     ATTR_MEDIA_VOLUME_LEVEL,
     ATTR_MEDIA_VOLUME_MUTED,
     DOMAIN as MEDIA_PLAYER_DOMAIN,
@@ -132,7 +133,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         #     return
 
         # self._update_zones(zone, new_state.state in self.updateable_states)
-        # self.async_write_ha_state()
+        self.async_write_ha_state()
 
     @property
     def name(self):
@@ -189,33 +190,41 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
             return state
         return state.state
 
-    # @property
-    # def is_volume_muted(self) -> bool:
-    #     """Return boolean if volume is currently muted."""
-    #     state = self.hass.states.get(self.main_zone_entity)
-    #     muted = state.attributes[ATTR_MEDIA_VOLUME_MUTED]
-    #     return muted
+    @property
+    def is_volume_muted(self) -> bool:
+        """Return boolean if volume is currently muted."""
+        state = self.hass.states.get(self.main_zone_entity)
+        if not state:
+            return False
+        muted = state.attributes[ATTR_MEDIA_VOLUME_MUTED]
+        return muted
 
-    # @property
-    # def volume_level(self) -> float | None:
-    #     """Volume level of the media player (0..1)."""
-    #     state = self.hass.states.get(self.main_zone_entity)
-    #     volume_level = state.attributes[ATTR_MEDIA_VOLUME_LEVEL]
-    #     return volume_level
+    @property
+    def volume_level(self) -> float | None:
+        """Volume level of the media player (0..1)."""
+        state = self.hass.states.get(self.main_zone_entity)
+        if not state:
+            return state
+        volume_level = state.attributes[ATTR_MEDIA_VOLUME_LEVEL]
+        return volume_level
 
-    # @property
-    # def source(self) -> str | None:
-    #     """Return the current input source."""
-    #     state = self.hass.states.get(self.main_zone_entity)
-    #     input_source = state.attributes[ATTR_INPUT_SOURCE]
-    #     return input_source
+    @property
+    def source(self) -> str | None:
+        """Return the current input source."""
+        state = self.hass.states.get(self.main_zone_entity)
+        if not state:
+            return state
+        input_source = state.attributes[ATTR_INPUT_SOURCE]
+        return input_source
 
-    # @property
-    # def source_list(self) -> list[str] | None:
-    #     """List of available input sources."""
-    #     state = self.hass.states.get(self.main_zone_entity)
-    #     input_source_list = state.attributes[ATTR_INPUT_SOURCE_LIST]
-    #     return input_source_list
+    @property
+    def source_list(self) -> list[str] | None:
+        """List of available input sources."""
+        state = self.hass.states.get(self.main_zone_entity)
+        if not state:
+            return state
+        input_source_list = state.attributes[ATTR_INPUT_SOURCE_LIST]
+        return input_source_list
 
     async def _async_turn_on(self, zones=None) -> None:
         """Turn on media player."""
