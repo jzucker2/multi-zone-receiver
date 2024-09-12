@@ -13,6 +13,7 @@ from typing import Any
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_NAME
 from homeassistant.core import Config, HomeAssistant
+from homeassistant.helpers.reload import async_setup_reload_service
 
 from .const import (
     CONF_ZONE_1,
@@ -73,6 +74,8 @@ async def async_setup_entry(
 
     # Assign the runtime_data
     entry.runtime_data = MultiZoneReceiverData.from_entry(entry)
+
+    await async_setup_reload_service(hass, DOMAIN, PLATFORMS)
 
     # https://developers.home-assistant.io/blog/2024/03/13/deprecate_add_run_job
     hass.async_add_job(hass.config_entries.async_forward_entry_setups(entry, PLATFORMS))

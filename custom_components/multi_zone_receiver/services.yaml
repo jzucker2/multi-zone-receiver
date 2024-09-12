@@ -1,3 +1,6 @@
+reload:
+  description: Reload all multi zone receiver entities.
+
 toggle_volume_mute:
   name: Toggle mute volume
   description: Toggle to mute/unmute a zone's volume.
