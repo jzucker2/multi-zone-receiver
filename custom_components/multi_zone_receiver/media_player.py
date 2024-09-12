@@ -12,6 +12,7 @@ from homeassistant.components.media_player import (
     MediaPlayerDeviceClass,
     MediaPlayerEntity,
     MediaPlayerEntityFeature,
+    MediaPlayerState,
 )
 from homeassistant.const import (
     ATTR_ENTITY_ID,
@@ -25,6 +26,9 @@ from homeassistant.const import (
 
 from . import MultiZoneReceiverConfigEntry
 from .const import (
+    ATTR_ACTIVE,
+    ATTR_AVAILABLE,
+    ATTR_DEFAULT,
     ATTR_ZONES,
     DEFAULT_NAME,
     DOMAIN,
@@ -105,18 +109,35 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
     def zones(self):
         return self.get_zones()
 
-    def get_default_zones(self):
+    def get_all_zones(self):
         return self.runtime_data.get_all_zones()
+
+    def get_default_zones(self):
+        return self.get_all_zones()
 
     @property
     def default_zones(self):
         return self.get_default_zones()
 
-    # @property
-    # def state(self) -> MediaPlayerState | None:
-    #     """Return the state of the device."""
-    #     state = self.hass.states.get(self.main_zone_entity)
-    #     return state
+    def _get_extra_state_attributes(self):
+        final_dict = {
+            ATTR_ENTITY_ID: self.get_all_zones(),
+            ATTR_ACTIVE: self.get_default_zones(),
+            ATTR_AVAILABLE: self.get_all_zones(),
+            ATTR_DEFAULT: self.get_default_zones(),
+        }
+        return dict(final_dict)
+
+    @property
+    def extra_state_attributes(self):
+        """Return the state attributes of the sensor."""
+        return self._get_extra_state_attributes()
+
+    @property
+    def state(self) -> MediaPlayerState | None:
+        """Return the state of the device."""
+        state = self.hass.states.get(self.main_zone_entity)
+        return state.state
 
     # @property
     # def is_volume_muted(self) -> bool:
