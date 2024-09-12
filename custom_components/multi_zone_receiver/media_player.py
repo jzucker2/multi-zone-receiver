@@ -133,7 +133,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         #     return
 
         # self._update_zones(zone, new_state.state in self.updateable_states)
-        # self.async_write_ha_state()
+        self.async_write_ha_state()
 
     @property
     def name(self):
