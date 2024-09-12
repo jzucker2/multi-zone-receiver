@@ -1,4 +1,5 @@
 reload:
+  name: Reload
   description: Reload all multi zone receiver entities.
 
 toggle_volume_mute:
