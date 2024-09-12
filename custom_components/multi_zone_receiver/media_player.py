@@ -10,7 +10,10 @@ from homeassistant.components.media_player import (
     ATTR_INPUT_SOURCE_LIST,
     ATTR_MEDIA_VOLUME_LEVEL,
     ATTR_MEDIA_VOLUME_MUTED,
+    ATTR_SOUND_MODE,
+    ATTR_SOUND_MODE_LIST,
     DOMAIN as MEDIA_PLAYER_DOMAIN,
+    SERVICE_SELECT_SOUND_MODE,
     SERVICE_SELECT_SOURCE,
     MediaPlayerDeviceClass,
     MediaPlayerEntity,
@@ -56,6 +59,7 @@ MULTI_ZONE_SUPPORTED_FEATURES = (
     | MediaPlayerEntityFeature.TURN_ON
     | MediaPlayerEntityFeature.TURN_OFF
     | MediaPlayerEntityFeature.SELECT_SOURCE
+    | MediaPlayerEntityFeature.SELECT_SOUND_MODE
 )
 
 
@@ -86,6 +90,12 @@ async def async_setup_entry(
     )
     hass.services.async_register(
         DOMAIN, SERVICE_TOGGLE_POWER, only_receiver.handle_toggle_power
+    )
+    hass.services.async_register(
+        DOMAIN, SERVICE_SELECT_SOURCE, only_receiver.handle_select_source
+    )
+    hass.services.async_register(
+        DOMAIN, SERVICE_SELECT_SOUND_MODE, only_receiver.handle_select_sound_mode
     )
 
 
@@ -226,6 +236,24 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         input_source_list = state.attributes[ATTR_INPUT_SOURCE_LIST]
         return input_source_list
 
+    @property
+    def sound_mode(self) -> str | None:
+        """Name of the current sound mode."""
+        state = self.hass.states.get(self.main_zone_entity)
+        if not state:
+            return state
+        sound_mode = state.attributes[ATTR_SOUND_MODE]
+        return sound_mode
+
+    @property
+    def sound_mode_list(self) -> list[str] | None:
+        """List of available sound modes."""
+        state = self.hass.states.get(self.main_zone_entity)
+        if not state:
+            return state
+        sound_mode_list = state.attributes[ATTR_SOUND_MODE_LIST]
+        return sound_mode_list
+
     async def _async_turn_on(self, zones=None) -> None:
         """Turn on media player."""
         if not zones:
@@ -353,6 +381,23 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         """Select input source."""
         await self._async_select_source(source, zones=self.default_zones)
 
+    async def _async_select_sound_mode(self, sound_mode: str, zones=None) -> None:
+        """Select sound mode."""
+        if not zones:
+            zones = self.default_zones
+        await self.hass.services.async_call(
+            MEDIA_PLAYER_DOMAIN,
+            SERVICE_SELECT_SOUND_MODE,
+            {ATTR_SOUND_MODE: sound_mode},
+            blocking=True,
+            target={ATTR_ENTITY_ID: zones},
+            context=self._context,
+        )
+
+    async def async_select_sound_mode(self, sound_mode: str) -> None:
+        """Select sound mode."""
+        await self._async_select_sound_mode(sound_mode, zones=self.default_zones)
+
     def _get_zone_entities(self, call_data):
         # TODO: handle default better
         zones = call_data.get(ATTR_ZONES, self.zone_names)
@@ -413,3 +458,17 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         _LOGGER.debug("handle_turn_off call: %s", call)
         zones = self._get_zone_entities(call.data)
         await self._async_turn_off(zones=zones)
+
+    async def handle_select_source(self, call):
+        """Handle the service action call."""
+        _LOGGER.debug("handle_select_source call: %s", call)
+        zones = self._get_zone_entities(call.data)
+        source = call.data.get(ATTR_INPUT_SOURCE)
+        await self._async_select_source(source, zones=zones)
+
+    async def handle_select_sound_mode(self, call):
+        """Handle the service action call."""
+        _LOGGER.debug("handle_select_sound_mode call: %s", call)
+        zones = self._get_zone_entities(call.data)
+        sound_mode = call.data.get(ATTR_SOUND_MODE)
+        await self._async_select_sound_mode(sound_mode, zones=zones)
