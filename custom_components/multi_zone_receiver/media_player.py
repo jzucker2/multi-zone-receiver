@@ -47,6 +47,7 @@ from .const import (
     MEDIA_PLAYER,
     SERVICE_TOGGLE_POWER,
     SERVICE_TOGGLE_VOLUME_MUTE,
+    SERVICE_TURN_ON_WITH_SOURCE,
 )
 from .entity import MultiZoneReceiverEntity
 
@@ -85,6 +86,9 @@ async def async_setup_entry(
         DOMAIN, SERVICE_VOLUME_MUTE, only_receiver.handle_volume_mute
     )
     hass.services.async_register(DOMAIN, SERVICE_TURN_ON, only_receiver.handle_turn_on)
+    hass.services.async_register(
+        DOMAIN, SERVICE_TURN_ON_WITH_SOURCE, only_receiver.handle_turn_on_with_source
+    )
     hass.services.async_register(
         DOMAIN, SERVICE_TURN_OFF, only_receiver.handle_turn_off
     )
@@ -199,6 +203,11 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         if not state:
             return state
         return state.state
+
+    @property
+    def volume_step(self) -> float:
+        """Return the step to be used by the volume_up and volume_down services."""
+        return self.runtime_data.volume_step
 
     @property
     def is_volume_muted(self) -> bool:
@@ -407,6 +416,10 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
             final_zones.append(zone_entity)
         return list(final_zones)
 
+    def _get_source(self, call_data):
+        source = call_data.get(ATTR_INPUT_SOURCE)
+        return source
+
     async def handle_toggle_mute(self, call):
         """Handle the service action call."""
         # FIXME: this doesn't actually work yet
@@ -459,11 +472,22 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         zones = self._get_zone_entities(call.data)
         await self._async_turn_off(zones=zones)
 
+    async def handle_turn_on_with_source(self, call):
+        """Handle the service action call."""
+        _LOGGER.debug("handle_turn_on_with_source call: %s", call)
+        zones = self._get_zone_entities(call.data)
+        source = self._get_source(call.data)
+        await self._async_turn_on(zones=zones)
+        _LOGGER.debug(
+            "handle_turn_on_with_source call: %s turned on, now set source", call
+        )
+        await self._async_select_source(source, zones=zones)
+
     async def handle_select_source(self, call):
         """Handle the service action call."""
         _LOGGER.debug("handle_select_source call: %s", call)
         zones = self._get_zone_entities(call.data)
-        source = call.data.get(ATTR_INPUT_SOURCE)
+        source = self._get_source(call.data)
         await self._async_select_source(source, zones=zones)
 
     async def handle_select_sound_mode(self, call):

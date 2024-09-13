@@ -24,6 +24,7 @@ PLATFORMS = [BINARY_SENSOR, SENSOR, MEDIA_PLAYER]
 # Services
 SERVICE_TOGGLE_VOLUME_MUTE = "toggle_volume_mute"
 SERVICE_TOGGLE_POWER = "toggle_power"
+SERVICE_TURN_ON_WITH_SOURCE = "turn_on_with_source"
 
 # Input Keys
 ATTR_ZONES = "zones"
@@ -39,9 +40,11 @@ CONF_ZONES = "zones"
 CONF_ZONE_1 = "zone_1"
 CONF_ZONE_2 = "zone_2"
 CONF_ZONE_3 = "zone_3"
+CONF_VOLUME_STEP = "volume_step"
 
 # Defaults
 DEFAULT_NAME = DOMAIN
+DEFAULT_VOLUME_STEP = 0.1
 
 
 STARTUP_MESSAGE = f"""

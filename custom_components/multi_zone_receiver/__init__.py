@@ -16,6 +16,7 @@ from homeassistant.core import Config, HomeAssistant
 from homeassistant.helpers.reload import async_setup_reload_service
 
 from .const import (
+    CONF_VOLUME_STEP,
     CONF_ZONE_1,
     CONF_ZONE_2,
     CONF_ZONE_3,
@@ -34,6 +35,7 @@ type MultiZoneReceiverConfigEntry = ConfigEntry[MultiZoneReceiverData]
 class MultiZoneReceiverData:
     name: str
     zones: dict[str, Any]
+    volume_step: float
 
     @classmethod
     def from_entry(cls, entry: MultiZoneReceiverConfigEntry):
@@ -49,7 +51,8 @@ class MultiZoneReceiverData:
             CONF_ZONE_2: zone_2,
             CONF_ZONE_3: zone_3,
         }
-        return cls(name=name, zones=zones_dict)
+        volume_step = entry.data.get(CONF_VOLUME_STEP)
+        return cls(name=name, zones=zones_dict, volume_step=volume_step)
 
     def get_main_zone(self):
         return self.zones[CONF_ZONE_1]
