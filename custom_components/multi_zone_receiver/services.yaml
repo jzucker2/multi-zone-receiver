@@ -218,6 +218,47 @@ toggle_power:
         text:
           multiple: true
 
+turn_on_with_source:
+  name: Turn on zone with source
+  description: Turn a zone on and set the source at the same time
+  target:
+  # Different fields that your service action accepts
+  fields:
+    # Key of the field
+    zones:
+      name: Zones
+      description: List of zones for action.
+      # Whether or not field is required (default = false)
+      required: false
+      # Advanced fields are only shown when the advanced mode is enabled for the user
+      # (default = false)
+      advanced: false
+      # Example value that can be passed for this field
+      example: "zone_1"
+      # The default field value
+      default: "zone_1"
+      # Selector (https://www.home-assistant.io/docs/blueprint/selectors/) to control
+      # the input UI for this field
+      selector:
+        text:
+          multiple: true
+    source:
+      name: Source
+      description: The source to select.
+      # Whether or not field is required (default = false)
+      required: true
+      # Advanced fields are only shown when the advanced mode is enabled for the user
+      # (default = false)
+      advanced: false
+      # Example value that can be passed for this field
+      example: "Phono"
+      # The default field value
+      default: "Phono"
+      # Selector (https://www.home-assistant.io/docs/blueprint/selectors/) to control
+      # the input UI for this field
+      selector:
+        text:
+
 select_source:
   name: Select source
   description: Set the source for a zone.
