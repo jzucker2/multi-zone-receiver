@@ -259,6 +259,64 @@ turn_on_with_source:
       selector:
         text:
 
+configure_zones_with_source:
+  name: Configure all zones with source
+  description: Turn all zones on or off and set the source at the same time
+  target:
+  # Different fields that your service action accepts
+  fields:
+    # Key of the field
+    on_zones:
+      name: On Zones
+      description: List of zones to turn on.
+      # Whether or not field is required (default = false)
+      required: false
+      # Advanced fields are only shown when the advanced mode is enabled for the user
+      # (default = false)
+      advanced: false
+      # Example value that can be passed for this field
+      example: "zone_1"
+      # The default field value
+      default: "zone_1"
+      # Selector (https://www.home-assistant.io/docs/blueprint/selectors/) to control
+      # the input UI for this field
+      selector:
+        text:
+          multiple: true
+    source:
+      name: Source
+      description: The source to select for zones turning on.
+      # Whether or not field is required (default = false)
+      required: false
+      # Advanced fields are only shown when the advanced mode is enabled for the user
+      # (default = false)
+      advanced: false
+      # Example value that can be passed for this field
+      example: "Phono"
+      # The default field value
+      default: "Phono"
+      # Selector (https://www.home-assistant.io/docs/blueprint/selectors/) to control
+      # the input UI for this field
+      selector:
+        text:
+    off_zones:
+      name: Off Zones
+      description: List of zones to turn off.
+      # Whether or not field is required (default = false)
+      required: false
+      # Advanced fields are only shown when the advanced mode is enabled for the user
+      # (default = false)
+      advanced: false
+      # Example value that can be passed for this field
+      example: "zone_2"
+      # The default field value
+      default: "zone_2"
+      # Selector (https://www.home-assistant.io/docs/blueprint/selectors/) to control
+      # the input UI for this field
+      selector:
+        text:
+          multiple: true
+
 select_source:
   name: Select source
   description: Set the source for a zone.

@@ -25,9 +25,12 @@ PLATFORMS = [BINARY_SENSOR, SENSOR, MEDIA_PLAYER]
 SERVICE_TOGGLE_VOLUME_MUTE = "toggle_volume_mute"
 SERVICE_TOGGLE_POWER = "toggle_power"
 SERVICE_TURN_ON_WITH_SOURCE = "turn_on_with_source"
+SERVICE_CONFIGURE_ZONES_WITH_SOURCE = "configure_zones_with_source"
 
 # Input Keys
 ATTR_ZONES = "zones"
+ATTR_ON_ZONES = "on_zones"
+ATTR_OFF_ZONES = "off_zones"
 ATTR_ACTIVE = "active"
 ATTR_AVAILABLE = "available"
 ATTR_DEFAULT = "default"
