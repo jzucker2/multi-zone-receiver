@@ -430,7 +430,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         # TODO: handle default better
         zones = call_data.get(ATTR_OFF_ZONES, [])
         _LOGGER.debug("_get_off_zones zones: %s", zones)
-        if not isinstance(zones, list):
+        if zones and not isinstance(zones, list):
             zones = list(zones)
         final_zones = []
         for zone in zones:
