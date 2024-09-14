@@ -42,7 +42,6 @@ from .const import (
     ATTR_AVAILABLE,
     ATTR_DEFAULT,
     ATTR_OFF_ZONES,
-    ATTR_ON_ZONES,
     ATTR_ZONES,
     DEFAULT_NAME,
     DOMAIN,
@@ -415,18 +414,11 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         """Select sound mode."""
         await self._async_select_sound_mode(sound_mode, zones=self.default_zones)
 
-    def _get_zone_entities(self, call_data):
+    def _get_zone_entities(self, call_data, default_value=None):
         # TODO: handle default better
-        zones = call_data.get(ATTR_ZONES, self.zone_names)
-        final_zones = []
-        for zone in zones:
-            zone_entity = self.zones[zone]
-            final_zones.append(zone_entity)
-        return list(final_zones)
-
-    def _get_on_zone_entities(self, call_data):
-        # TODO: handle default better
-        zones = call_data.get(ATTR_ON_ZONES, [])
+        if not default_value:
+            default_value = self.zone_names
+        zones = call_data.get(ATTR_ZONES, default_value)
         final_zones = []
         for zone in zones:
             zone_entity = self.zones[zone]
@@ -512,7 +504,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
     async def handle_configure_zones_with_source(self, call):
         """Handle the service action call."""
         _LOGGER.debug("handle_configure_zones_with_source call: %s", call)
-        on_zones = self._get_on_zone_entities(call.data)
+        on_zones = self._get_zone_entities(call.data, default_value=[])
         off_zones = self._get_off_zone_entities(call.data)
         if on_zones:
             _LOGGER.debug(

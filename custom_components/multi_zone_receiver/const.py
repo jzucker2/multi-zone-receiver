@@ -29,7 +29,6 @@ SERVICE_CONFIGURE_ZONES_WITH_SOURCE = "configure_zones_with_source"
 
 # Input Keys
 ATTR_ZONES = "zones"
-ATTR_ON_ZONES = "on_zones"
 ATTR_OFF_ZONES = "off_zones"
 ATTR_ACTIVE = "active"
 ATTR_AVAILABLE = "available"

@@ -266,9 +266,9 @@ configure_zones_with_source:
   # Different fields that your service action accepts
   fields:
     # Key of the field
-    on_zones:
-      name: On Zones
-      description: List of zones to turn on.
+    zones:
+      name: Zones
+      description: List of zones to turn on (and set source).
       # Whether or not field is required (default = false)
       required: false
       # Advanced fields are only shown when the advanced mode is enabled for the user
