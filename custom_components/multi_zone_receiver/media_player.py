@@ -41,10 +41,12 @@ from .const import (
     ATTR_ACTIVE,
     ATTR_AVAILABLE,
     ATTR_DEFAULT,
+    ATTR_OFF_ZONES,
     ATTR_ZONES,
     DEFAULT_NAME,
     DOMAIN,
     MEDIA_PLAYER,
+    SERVICE_CONFIGURE_ZONES_WITH_SOURCE,
     SERVICE_TOGGLE_POWER,
     SERVICE_TOGGLE_VOLUME_MUTE,
     SERVICE_TURN_ON_WITH_SOURCE,
@@ -88,6 +90,11 @@ async def async_setup_entry(
     hass.services.async_register(DOMAIN, SERVICE_TURN_ON, only_receiver.handle_turn_on)
     hass.services.async_register(
         DOMAIN, SERVICE_TURN_ON_WITH_SOURCE, only_receiver.handle_turn_on_with_source
+    )
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_CONFIGURE_ZONES_WITH_SOURCE,
+        only_receiver.handle_configure_zones_with_source,
     )
     hass.services.async_register(
         DOMAIN, SERVICE_TURN_OFF, only_receiver.handle_turn_off
@@ -407,9 +414,20 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         """Select sound mode."""
         await self._async_select_sound_mode(sound_mode, zones=self.default_zones)
 
-    def _get_zone_entities(self, call_data):
+    def _get_zone_entities(self, call_data, default_value=None):
         # TODO: handle default better
-        zones = call_data.get(ATTR_ZONES, self.zone_names)
+        if not default_value:
+            default_value = self.zone_names
+        zones = call_data.get(ATTR_ZONES, default_value)
+        final_zones = []
+        for zone in zones:
+            zone_entity = self.zones[zone]
+            final_zones.append(zone_entity)
+        return list(final_zones)
+
+    def _get_off_zone_entities(self, call_data):
+        # TODO: handle default better
+        zones = call_data.get(ATTR_OFF_ZONES, [])
         final_zones = []
         for zone in zones:
             zone_entity = self.zones[zone]
@@ -482,6 +500,32 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
             "handle_turn_on_with_source call: %s turned on, now set source", call
         )
         await self._async_select_source(source, zones=zones)
+
+    async def handle_configure_zones_with_source(self, call):
+        """Handle the service action call."""
+        _LOGGER.debug("handle_configure_zones_with_source call: %s", call)
+        on_zones = self._get_zone_entities(call.data, default_value=[])
+        off_zones = self._get_off_zone_entities(call.data)
+        if on_zones:
+            _LOGGER.debug(
+                "handle_configure_zones_with_source call: %s found on_zones", call
+            )
+            await self._async_turn_on(zones=on_zones)
+            source = self._get_source(call.data)
+            _LOGGER.debug(
+                "handle_configure_zones_with_source call: %s turned on, now set source: %s",
+                call,
+                source,
+            )
+            await self._async_select_source(source, zones=on_zones)
+        if off_zones:
+            _LOGGER.debug(
+                "handle_configure_zones_with_source call: %s found off_zones", call
+            )
+            await self._async_turn_off(zones=off_zones)
+        _LOGGER.debug(
+            "handle_configure_zones_with_source call: %s is now all done", call
+        )
 
     async def handle_select_source(self, call):
         """Handle the service action call."""
