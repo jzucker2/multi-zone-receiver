@@ -72,7 +72,7 @@ async def async_setup_entry(
     """Setup media_player platform."""
     only_receiver = MultiZoneReceiverMediaPlayer(entry)
     async_add_devices([only_receiver])
-    only_receiver.register_hass_services(hass)
+    only_receiver.async_register_hass_custom_actions(hass)
 
 
 class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
@@ -510,7 +510,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         sound_mode = call.data.get(ATTR_SOUND_MODE)
         await self._async_select_sound_mode(sound_mode, zones=zones)
 
-    def register_hass_services(self, hass):
+    def async_register_hass_custom_actions(self, hass):
         """Register all the custom service actions."""
         hass.services.async_register(
             DOMAIN, SERVICE_TOGGLE_VOLUME_MUTE, self.handle_toggle_mute
