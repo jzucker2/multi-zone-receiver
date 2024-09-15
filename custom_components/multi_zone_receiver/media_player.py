@@ -72,42 +72,7 @@ async def async_setup_entry(
     """Setup media_player platform."""
     only_receiver = MultiZoneReceiverMediaPlayer(entry)
     async_add_devices([only_receiver])
-    hass.services.async_register(
-        DOMAIN, SERVICE_TOGGLE_VOLUME_MUTE, only_receiver.handle_toggle_mute
-    )
-    hass.services.async_register(
-        DOMAIN, SERVICE_VOLUME_UP, only_receiver.handle_volume_up
-    )
-    hass.services.async_register(
-        DOMAIN, SERVICE_VOLUME_DOWN, only_receiver.handle_volume_down
-    )
-    hass.services.async_register(
-        DOMAIN, SERVICE_VOLUME_SET, only_receiver.handle_volume_set
-    )
-    hass.services.async_register(
-        DOMAIN, SERVICE_VOLUME_MUTE, only_receiver.handle_volume_mute
-    )
-    hass.services.async_register(DOMAIN, SERVICE_TURN_ON, only_receiver.handle_turn_on)
-    hass.services.async_register(
-        DOMAIN, SERVICE_TURN_ON_WITH_SOURCE, only_receiver.handle_turn_on_with_source
-    )
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_CONFIGURE_ZONES_WITH_SOURCE,
-        only_receiver.handle_configure_zones_with_source,
-    )
-    hass.services.async_register(
-        DOMAIN, SERVICE_TURN_OFF, only_receiver.handle_turn_off
-    )
-    hass.services.async_register(
-        DOMAIN, SERVICE_TOGGLE_POWER, only_receiver.handle_toggle_power
-    )
-    hass.services.async_register(
-        DOMAIN, SERVICE_SELECT_SOURCE, only_receiver.handle_select_source
-    )
-    hass.services.async_register(
-        DOMAIN, SERVICE_SELECT_SOUND_MODE, only_receiver.handle_select_sound_mode
-    )
+    only_receiver.register_hass_services(hass)
 
 
 class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
@@ -544,3 +509,36 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         zones = self._get_zone_entities(call.data)
         sound_mode = call.data.get(ATTR_SOUND_MODE)
         await self._async_select_sound_mode(sound_mode, zones=zones)
+
+    def register_hass_services(self, hass):
+        """Register all the custom service actions."""
+        hass.services.async_register(
+            DOMAIN, SERVICE_TOGGLE_VOLUME_MUTE, self.handle_toggle_mute
+        )
+        hass.services.async_register(DOMAIN, SERVICE_VOLUME_UP, self.handle_volume_up)
+        hass.services.async_register(
+            DOMAIN, SERVICE_VOLUME_DOWN, self.handle_volume_down
+        )
+        hass.services.async_register(DOMAIN, SERVICE_VOLUME_SET, self.handle_volume_set)
+        hass.services.async_register(
+            DOMAIN, SERVICE_VOLUME_MUTE, self.handle_volume_mute
+        )
+        hass.services.async_register(DOMAIN, SERVICE_TURN_ON, self.handle_turn_on)
+        hass.services.async_register(
+            DOMAIN, SERVICE_TURN_ON_WITH_SOURCE, self.handle_turn_on_with_source
+        )
+        hass.services.async_register(
+            DOMAIN,
+            SERVICE_CONFIGURE_ZONES_WITH_SOURCE,
+            self.handle_configure_zones_with_source,
+        )
+        hass.services.async_register(DOMAIN, SERVICE_TURN_OFF, self.handle_turn_off)
+        hass.services.async_register(
+            DOMAIN, SERVICE_TOGGLE_POWER, self.handle_toggle_power
+        )
+        hass.services.async_register(
+            DOMAIN, SERVICE_SELECT_SOURCE, self.handle_select_source
+        )
+        hass.services.async_register(
+            DOMAIN, SERVICE_SELECT_SOUND_MODE, self.handle_select_sound_mode
+        )
