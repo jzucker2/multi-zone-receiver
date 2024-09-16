@@ -5,7 +5,6 @@ For more details about this integration, please refer to
 https://github.com/jzucker2/multi-zone-receiver
 """
 
-import asyncio
 from dataclasses import dataclass
 import logging
 from typing import Any
@@ -22,7 +21,6 @@ from .const import (
     CONF_ZONE_3,
     DOMAIN,
     PLATFORMS,
-    STARTUP_MESSAGE,
 )
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
@@ -71,40 +69,39 @@ async def async_setup_entry(
     entry: MultiZoneReceiverConfigEntry,
 ):
     """Set up this integration using UI."""
-    if hass.data.get(DOMAIN) is None:
-        hass.data.setdefault(DOMAIN, {})
-        _LOGGER.info(STARTUP_MESSAGE)
+    # if entry.runtime_data is None:
+    #     _LOGGER.info(STARTUP_MESSAGE)
 
     # Assign the runtime_data
     entry.runtime_data = MultiZoneReceiverData.from_entry(entry)
 
     await async_setup_reload_service(hass, DOMAIN, PLATFORMS)
 
-    # https://developers.home-assistant.io/blog/2024/03/13/deprecate_add_run_job
-    hass.async_add_job(hass.config_entries.async_forward_entry_setups(entry, PLATFORMS))
+    # Set up all platforms for this device/entry.
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
-    entry.add_update_listener(async_reload_entry)
+    # Reload entry when its updated.
+    entry.async_on_unload(entry.add_update_listener(async_reload_entry))
 
     return True
 
 
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+async def async_unload_entry(
+    hass: HomeAssistant,
+    entry: MultiZoneReceiverConfigEntry,
+) -> bool:
     """Handle removal of an entry."""
-    unloaded = all(
-        await asyncio.gather(
-            *[
-                hass.config_entries.async_forward_entry_unload(entry, platform)
-                for platform in PLATFORMS
-            ]
+    if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
+        _LOGGER.debug(
+            "Unloading platforms entry: %s with unload_ok: %s", entry, unload_ok
         )
-    )
-    if unloaded:
-        hass.data[DOMAIN].pop(entry.entry_id)
 
-    return unloaded
+    return unload_ok
 
 
-async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
+async def async_reload_entry(
+    hass: HomeAssistant,
+    entry: MultiZoneReceiverConfigEntry,
+) -> None:
     """Reload config entry."""
-    await async_unload_entry(hass, entry)
-    await async_setup_entry(hass, entry)
+    await hass.config_entries.async_reload(entry.entry_id)
