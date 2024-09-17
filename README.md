@@ -108,6 +108,8 @@ Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [in
 - https://developers.home-assistant.io/docs/asyncio_thread_safety/
   - This covers adding and removing and callbacks
 - https://developers.home-assistant.io/docs/development_validation
+- https://developers.home-assistant.io/docs/core/platform/significant_change/
+  - I want to use this to stabilize volume changes and keep them response on the client end
 
 ## Debug Notes
 
