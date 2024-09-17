@@ -107,6 +107,7 @@ Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [in
 - https://github.com/home-assistant/core/blob/dev/homeassistant/components/ecowitt/entity.py
 - https://developers.home-assistant.io/docs/asyncio_thread_safety/
   - This covers adding and removing and callbacks
+- https://developers.home-assistant.io/docs/development_validation
 
 ## Debug Notes
 
