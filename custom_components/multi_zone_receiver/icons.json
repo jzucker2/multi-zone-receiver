@@ -2,6 +2,42 @@
   "services": {
     "reload": {
       "service": "mdi:reload"
+    },
+    "toggle_volume_mute": {
+      "service": "mdi:volume-mute"
+    },
+    "volume_mute": {
+      "service": "mdi:volume-mute"
+    },
+    "volume_up": {
+      "service": "mdi:volume-plus"
+    },
+    "volume_down": {
+      "service": "mdi:volume-minus"
+    },
+    "volume_set": {
+      "service": "mdi:volume-medium"
+    },
+    "turn_on": {
+      "service": "mdi:power"
+    },
+    "turn_off": {
+      "service": "mdi:power"
+    },
+    "toggle_power": {
+      "service": "mdi:power"
+    },
+    "turn_on_with_source": {
+      "service": "mdi:power"
+    },
+    "configure_zones_with_source": {
+      "service": "mdi:import"
+    },
+    "select_source": {
+      "service": "mdi:import"
+    },
+    "select_sound_mode": {
+      "service": "mdi:surround-sound"
     }
   }
 }
