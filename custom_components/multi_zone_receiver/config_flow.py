@@ -45,9 +45,6 @@ DATA_SCHEMA = vol.Schema(
         vol.Required(CONF_ZONE_3): selector.EntitySelector(
             selector.EntitySelectorConfig(domain=MEDIA_PLAYER, multiple=False),
         ),
-        # vol.Required(CONF_ZONE_1): str,
-        # vol.Required(CONF_ZONE_2): str,
-        # vol.Required(CONF_ZONE_3): str,
         vol.Optional(CONF_VOLUME_STEP, default=DEFAULT_VOLUME_STEP): vol.Coerce(float),
     }
 )
