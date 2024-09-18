@@ -3,7 +3,6 @@
 # Base component constants
 NAME = "Multi Zone Receiver"
 DOMAIN = "multi_zone_receiver"
-DOMAIN_DATA = f"{DOMAIN}_data"
 VERSION = "0.5.32"
 
 ATTRIBUTION = "Data provided by http://jsonplaceholder.typicode.com/"
