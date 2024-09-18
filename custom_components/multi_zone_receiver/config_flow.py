@@ -6,6 +6,7 @@ import logging
 from homeassistant import config_entries
 from homeassistant.const import CONF_NAME
 from homeassistant.core import callback
+from homeassistant.helpers import config_validation as cv
 import voluptuous as vol
 
 from .const import (
@@ -33,13 +34,16 @@ _LOGGER: logging.Logger = logging.getLogger(__package__)
 # figure this out or look further into it.
 DATA_SCHEMA = vol.Schema(
     {
-        vol.Required(CONF_NAME): str,
-        # vol.Required(CONF_ZONE_1): cv.entity_domain(MEDIA_PLAYER_DOMAIN),
-        # vol.Required(CONF_ZONE_2): cv.entity_domain(MEDIA_PLAYER_DOMAIN),
-        # vol.Required(CONF_ZONE_3): cv.entity_domain(MEDIA_PLAYER_DOMAIN),
-        vol.Required(CONF_ZONE_1): str,
-        vol.Required(CONF_ZONE_2): str,
-        vol.Required(CONF_ZONE_3): str,
+        vol.Required(CONF_NAME): cv.string,
+        vol.Required(CONF_ZONE_1): cv.entity_id,
+        vol.Required(CONF_ZONE_2): cv.entity_id,
+        vol.Required(CONF_ZONE_3): cv.entity_id,
+        # vol.Required(CONF_ZONE_1): cv.entity_domain(MEDIA_PLAYER),
+        # vol.Required(CONF_ZONE_2): cv.entity_domain(MEDIA_PLAYER),
+        # vol.Required(CONF_ZONE_3): cv.entity_domain(MEDIA_PLAYER),
+        # vol.Required(CONF_ZONE_1): str,
+        # vol.Required(CONF_ZONE_2): str,
+        # vol.Required(CONF_ZONE_3): str,
         vol.Optional(CONF_VOLUME_STEP, default=DEFAULT_VOLUME_STEP): vol.Coerce(float),
     }
 )
@@ -49,6 +53,7 @@ class MultiZoneReceiverFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     """Config flow for multi_zone_receiver."""
 
     VERSION = 2
+    # FIXME: this is not accurate
     CONNECTION_CLASS = config_entries.CONN_CLASS_LOCAL_POLL
 
     def __init__(self):
