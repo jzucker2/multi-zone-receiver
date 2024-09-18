@@ -110,6 +110,8 @@ Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [in
 - https://developers.home-assistant.io/docs/development_validation
 - https://developers.home-assistant.io/docs/core/platform/significant_change/
   - I want to use this to stabilize volume changes and keep them response on the client end
+- https://github.com/home-assistant/core/blob/931c8f9e66193348fdcf92f93e7803d79b077f2f/homeassistant/components/group/config_flow.py#L22
+  - For selecting entities
 
 ## Debug Notes
 
