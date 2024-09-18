@@ -53,8 +53,6 @@ class MultiZoneReceiverFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     """Config flow for multi_zone_receiver."""
 
     VERSION = 2
-    # FIXME: this is not accurate
-    CONNECTION_CLASS = config_entries.CONN_CLASS_LOCAL_POLL
 
     def __init__(self):
         """Initialize."""
