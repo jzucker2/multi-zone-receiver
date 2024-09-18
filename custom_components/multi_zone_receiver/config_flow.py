@@ -52,7 +52,7 @@ DATA_SCHEMA = vol.Schema(
 class MultiZoneReceiverFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     """Config flow for multi_zone_receiver."""
 
-    VERSION = 2
+    VERSION = 1
 
     def __init__(self):
         """Initialize."""
