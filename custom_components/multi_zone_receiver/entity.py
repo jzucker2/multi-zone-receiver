@@ -1,6 +1,7 @@
 """MultiZoneReceiverEntity class"""
 
 from homeassistant.components.media_player import (
+    ATTR_INPUT_SOURCE,
     ATTR_MEDIA_VOLUME_LEVEL,
     MediaPlayerState,
 )
@@ -84,3 +85,11 @@ class MultiZoneReceiverEntity(Entity):
     def _get_is_on_state_for_zone(self, zone_entity) -> bool:
         current_state = self._get_state_value_for_zone(zone_entity)
         return bool(current_state != MediaPlayerState.OFF)
+
+    def _get_source_for_zone(self, zone_entity) -> str | None:
+        """Return the current input source for a zone."""
+        state = self.hass.states.get(zone_entity)
+        if not state:
+            return state
+        input_source = state.attributes[ATTR_INPUT_SOURCE]
+        return input_source

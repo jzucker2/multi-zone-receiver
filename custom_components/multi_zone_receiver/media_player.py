@@ -167,11 +167,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
     @property
     def source(self) -> str | None:
         """Return the current input source."""
-        state = self.hass.states.get(self.main_zone_entity)
-        if not state:
-            return state
-        input_source = state.attributes[ATTR_INPUT_SOURCE]
-        return input_source
+        return self._get_source_for_zone(self.main_zone_entity)
 
     @property
     def source_list(self) -> list[str] | None:
