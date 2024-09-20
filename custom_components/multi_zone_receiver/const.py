@@ -42,10 +42,12 @@ CONF_ZONE_1 = "zone_1"
 CONF_ZONE_2 = "zone_2"
 CONF_ZONE_3 = "zone_3"
 CONF_VOLUME_STEP = "volume_step"
+CONF_OTHER_ZONE_ON_DELAY_SECONDS = "other_zone_on_delay_seconds"
 
 # Defaults
 DEFAULT_NAME = DOMAIN
 DEFAULT_VOLUME_STEP = 0.1
+DEFAULT_OTHER_ZONE_ON_DELAY_SECONDS = 2.0
 
 
 STARTUP_MESSAGE = f"""
