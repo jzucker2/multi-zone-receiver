@@ -1,9 +1,12 @@
 """Binary sensor platform for Multi Zone Receiver."""
 
-from homeassistant.components.binary_sensor import BinarySensorEntity
+from homeassistant.components.binary_sensor import (
+    BinarySensorDeviceClass,
+    BinarySensorEntity,
+)
 
 from . import MultiZoneReceiverConfigEntry
-from .const import BINARY_SENSOR, BINARY_SENSOR_DEVICE_CLASS, DEFAULT_NAME
+from .const import BINARY_SENSOR, DEFAULT_NAME
 from .entity import MultiZoneReceiverEntity
 
 
@@ -11,23 +14,22 @@ async def async_setup_entry(
     hass, entry: MultiZoneReceiverConfigEntry, async_add_devices
 ):
     """Setup binary_sensor platform."""
-    async_add_devices([MultiZoneReceiverBinarySensor(entry)])
+    async_add_devices([MultiZoneReceiverZonePowerBinarySensor(entry)])
 
 
-class MultiZoneReceiverBinarySensor(MultiZoneReceiverEntity, BinarySensorEntity):
-    """multi_zone_receiver binary_sensor class."""
+class MultiZoneReceiverZonePowerBinarySensor(
+    MultiZoneReceiverEntity, BinarySensorEntity
+):
+    """multi_zone_receiver zone power binary_sensor class."""
+
+    _attr_device_class = BinarySensorDeviceClass.POWER
 
     @property
     def name(self):
         """Return the name of the binary_sensor."""
-        return f"{DEFAULT_NAME}_{BINARY_SENSOR}"
-
-    @property
-    def device_class(self):
-        """Return the class of this binary_sensor."""
-        return BINARY_SENSOR_DEVICE_CLASS
+        return f"{DEFAULT_NAME}_{BINARY_SENSOR}_Power"
 
     @property
     def is_on(self):
         """Return true if the binary_sensor is on."""
-        return True
+        return self._get_is_on_state_for_zone(self.main_zone_entity)
