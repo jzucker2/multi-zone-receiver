@@ -45,6 +45,11 @@ class MultiZoneReceiverVolumeSensor(MultiZoneReceiverEntity):
         return f"{DEFAULT_NAME}_{SENSOR}_Volume"
 
     @property
-    def state(self) -> MediaPlayerState | None:
-        """Return the state of the zone."""
+    def volume_level(self) -> float | None:
+        """Return the volume level of the zone."""
         return self._get_volume_level(self.main_zone_entity)
+
+    @property
+    def state(self) -> float | None:
+        """Return the state of the zone."""
+        return self.volume_level
