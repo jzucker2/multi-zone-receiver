@@ -16,6 +16,7 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.reload import async_setup_reload_service
 
 from .const import (
+    CONF_OTHER_ZONE_ON_DELAY_SECONDS,
     CONF_VOLUME_STEP,
     CONF_ZONE_1,
     CONF_ZONE_2,
@@ -37,6 +38,7 @@ class MultiZoneReceiverData:
     name: str
     zones: dict[str, Any]
     volume_step: float
+    other_zone_on_delay_seconds: float
 
     @classmethod
     def from_entry(cls, entry: MultiZoneReceiverConfigEntry):
@@ -53,7 +55,13 @@ class MultiZoneReceiverData:
             CONF_ZONE_3: zone_3,
         }
         volume_step = entry.data.get(CONF_VOLUME_STEP)
-        return cls(name=name, zones=zones_dict, volume_step=volume_step)
+        other_zone_on_delay_seconds = entry.data.get(CONF_OTHER_ZONE_ON_DELAY_SECONDS)
+        return cls(
+            name=name,
+            zones=zones_dict,
+            volume_step=volume_step,
+            other_zone_on_delay_seconds=other_zone_on_delay_seconds,
+        )
 
     def get_main_zone(self):
         return self.zones[CONF_ZONE_1]

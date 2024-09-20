@@ -3,7 +3,7 @@
 # Base component constants
 NAME = "Multi Zone Receiver"
 DOMAIN = "multi_zone_receiver"
-VERSION = "0.6.1"
+VERSION = "0.6.2"
 
 ATTRIBUTION = "Data provided by http://jsonplaceholder.typicode.com/"
 ISSUE_URL = "https://github.com/jzucker2/multi-zone-receiver/issues"
@@ -42,10 +42,12 @@ CONF_ZONE_1 = "zone_1"
 CONF_ZONE_2 = "zone_2"
 CONF_ZONE_3 = "zone_3"
 CONF_VOLUME_STEP = "volume_step"
+CONF_OTHER_ZONE_ON_DELAY_SECONDS = "other_zone_on_delay_seconds"
 
 # Defaults
 DEFAULT_NAME = DOMAIN
 DEFAULT_VOLUME_STEP = 0.1
+DEFAULT_OTHER_ZONE_ON_DELAY_SECONDS = 2.0
 
 
 STARTUP_MESSAGE = f"""

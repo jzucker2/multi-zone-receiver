@@ -235,16 +235,21 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         sound_mode_list = state.attributes[ATTR_SOUND_MODE_LIST]
         return sound_mode_list
 
+    @property
+    def other_zone_on_delay_seconds(self):
+        return self.runtime_data.other_zone_on_delay_seconds
+
     async def _async_turn_on(self, zones=None) -> None:
         """Turn on media player."""
         if not zones:
             zones = self.default_zones
         # FIXME: check entity values instead of pausing
-        on_count = 0
+        i = 0
         for entity in zones:
-            sleep_time = 2
-            if on_count == 0:
+            sleep_time = self.other_zone_on_delay_seconds
+            if i == 0:
                 sleep_time = 0
+            _LOGGER.debug("Turning on iteration i %s will wait for: %s", i, sleep_time)
             await asyncio.sleep(sleep_time)
             await self.hass.services.async_call(
                 MEDIA_PLAYER_DOMAIN,
@@ -254,7 +259,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
                 target={ATTR_ENTITY_ID: entity},
                 context=self._context,
             )
-            on_count += 1
+            i += 1
 
     async def async_turn_on(self) -> None:
         """Turn on media player."""

@@ -10,10 +10,12 @@ from homeassistant.helpers import config_validation as cv, selector
 import voluptuous as vol
 
 from .const import (
+    CONF_OTHER_ZONE_ON_DELAY_SECONDS,
     CONF_VOLUME_STEP,
     CONF_ZONE_1,
     CONF_ZONE_2,
     CONF_ZONE_3,
+    DEFAULT_OTHER_ZONE_ON_DELAY_SECONDS,
     DEFAULT_VOLUME_STEP,
     DOMAIN,
     MEDIA_PLAYER,
@@ -45,10 +47,11 @@ DATA_SCHEMA = vol.Schema(
         vol.Required(CONF_ZONE_3): selector.EntitySelector(
             selector.EntitySelectorConfig(domain=MEDIA_PLAYER, multiple=False),
         ),
-        # vol.Required(CONF_ZONE_1): str,
-        # vol.Required(CONF_ZONE_2): str,
-        # vol.Required(CONF_ZONE_3): str,
         vol.Optional(CONF_VOLUME_STEP, default=DEFAULT_VOLUME_STEP): vol.Coerce(float),
+        vol.Optional(
+            CONF_OTHER_ZONE_ON_DELAY_SECONDS,
+            default=DEFAULT_OTHER_ZONE_ON_DELAY_SECONDS,
+        ): vol.Coerce(float),
     }
 )
 
