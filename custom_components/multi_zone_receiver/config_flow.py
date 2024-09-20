@@ -4,6 +4,7 @@ import asyncio
 import logging
 
 from homeassistant import config_entries
+from homeassistant.components.media_player import MediaPlayerDeviceClass
 from homeassistant.const import CONF_NAME
 from homeassistant.core import callback
 from homeassistant.helpers import config_validation as cv, selector
@@ -39,13 +40,25 @@ DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_NAME): cv.string,
         vol.Required(CONF_ZONE_1): selector.EntitySelector(
-            selector.EntitySelectorConfig(domain=MEDIA_PLAYER, multiple=False),
+            selector.EntitySelectorConfig(
+                domain=MEDIA_PLAYER,
+                device_class=MediaPlayerDeviceClass.RECEIVER,
+                multiple=False,
+            ),
         ),
         vol.Required(CONF_ZONE_2): selector.EntitySelector(
-            selector.EntitySelectorConfig(domain=MEDIA_PLAYER, multiple=False),
+            selector.EntitySelectorConfig(
+                domain=MEDIA_PLAYER,
+                device_class=MediaPlayerDeviceClass.RECEIVER,
+                multiple=False,
+            ),
         ),
         vol.Required(CONF_ZONE_3): selector.EntitySelector(
-            selector.EntitySelectorConfig(domain=MEDIA_PLAYER, multiple=False),
+            selector.EntitySelectorConfig(
+                domain=MEDIA_PLAYER,
+                device_class=MediaPlayerDeviceClass.RECEIVER,
+                multiple=False,
+            ),
         ),
         vol.Optional(CONF_VOLUME_STEP, default=DEFAULT_VOLUME_STEP): vol.Coerce(float),
         vol.Optional(
