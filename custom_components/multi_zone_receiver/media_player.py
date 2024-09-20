@@ -126,34 +126,6 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         """Return the name of the media_player."""
         return f"{DEFAULT_NAME}_{MEDIA_PLAYER}"
 
-    def get_main_zone(self):
-        return self.runtime_data.get_main_zone()
-
-    @property
-    def main_zone_entity(self):
-        return self.get_main_zone()
-
-    def get_zones(self):
-        return self.runtime_data.zones
-
-    @property
-    def zone_names(self):
-        return self.get_zones().keys()
-
-    @property
-    def zones(self):
-        return self.get_zones()
-
-    def get_all_zones(self):
-        return self.runtime_data.get_all_zones()
-
-    def get_default_zones(self):
-        return self.get_all_zones()
-
-    @property
-    def default_zones(self):
-        return self.get_default_zones()
-
     def _get_extra_state_attributes(self) -> Mapping[str, Any] | None:
         final_dict = {
             ATTR_ENTITY_ID: self.get_all_zones(),
@@ -171,10 +143,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
     @property
     def state(self) -> MediaPlayerState | None:
         """Return the state of the device."""
-        state = self.hass.states.get(self.main_zone_entity)
-        if not state:
-            return state
-        return state.state
+        return self._get_state_value_for_zone(self.main_zone_entity)
 
     @property
     def volume_step(self) -> float:
@@ -193,20 +162,12 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
     @property
     def volume_level(self) -> float | None:
         """Volume level of the media player (0..1)."""
-        state = self.hass.states.get(self.main_zone_entity)
-        if not state:
-            return state
-        volume_level = state.attributes[ATTR_MEDIA_VOLUME_LEVEL]
-        return volume_level
+        return self._get_volume_level(self.main_zone_entity)
 
     @property
     def source(self) -> str | None:
         """Return the current input source."""
-        state = self.hass.states.get(self.main_zone_entity)
-        if not state:
-            return state
-        input_source = state.attributes[ATTR_INPUT_SOURCE]
-        return input_source
+        return self._get_source_for_zone(self.main_zone_entity)
 
     @property
     def source_list(self) -> list[str] | None:
