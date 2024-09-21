@@ -30,6 +30,11 @@ class MultiZoneReceiverStateSensor(MultiZoneReceiverEntity):
         return f"{DEFAULT_NAME}_{SENSOR}_State"
 
     @property
+    def unique_id_suffix(self):
+        """Return a second half of ID to use for this entity."""
+        return "state"
+
+    @property
     def state(self) -> MediaPlayerState | None:
         """Return the state of the zone."""
         return self._get_state_value_for_zone(self.main_zone_entity)
@@ -47,6 +52,11 @@ class MultiZoneReceiverSourceSensor(MultiZoneReceiverEntity):
     def name(self):
         """Return the name of the sensor."""
         return f"{DEFAULT_NAME}_{SENSOR}_Source"
+
+    @property
+    def unique_id_suffix(self):
+        """Return a second half of ID to use for this entity."""
+        return "source"
 
     @property
     def source(self) -> str | None:
@@ -73,6 +83,11 @@ class MultiZoneReceiverVolumeSensor(MultiZoneReceiverEntity):
     def name(self):
         """Return the name of the sensor."""
         return f"{DEFAULT_NAME}_{SENSOR}_Volume"
+
+    @property
+    def unique_id_suffix(self):
+        """Return a second half of ID to use for this entity."""
+        return "volume"
 
     @property
     def volume_level(self) -> float | None:

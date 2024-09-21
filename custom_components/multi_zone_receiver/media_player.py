@@ -126,6 +126,11 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
         """Return the name of the media_player."""
         return f"{DEFAULT_NAME}_{MEDIA_PLAYER}"
 
+    @property
+    def unique_id_suffix(self):
+        """Return a second half of ID to use for this entity."""
+        return "media_player"
+
     def _get_extra_state_attributes(self) -> Mapping[str, Any] | None:
         final_dict = {
             ATTR_ENTITY_ID: self.get_all_zones(),
