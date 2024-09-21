@@ -27,9 +27,19 @@ class MultiZoneReceiverEntity(Entity):
         return self.config_entry.entry_id
 
     @property
+    def unique_id_base(self):
+        """Return the first half of ID to use for this entity."""
+        return "base"
+
+    @property
+    def unique_id_suffix(self):
+        """Return a second half of ID to use for this entity."""
+        return self.config_entry_id
+
+    @property
     def unique_id(self):
         """Return a unique ID to use for this entity."""
-        return self.config_entry_id
+        return f"{self.unique_id_base}{self.unique_id_suffix}"
 
     @property
     def device_info(self):
