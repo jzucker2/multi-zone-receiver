@@ -1,13 +1,20 @@
 """MultiZoneReceiverEntity class"""
 
+import logging
+
 from homeassistant.components.media_player import (
     ATTR_INPUT_SOURCE,
     ATTR_MEDIA_VOLUME_LEVEL,
     MediaPlayerState,
 )
+from homeassistant.const import STATE_IDLE, STATE_OFF, STATE_ON, STATE_PLAYING
+from homeassistant.core import Event, EventStateChangedData, callback
 from homeassistant.helpers.entity import Entity
+from homeassistant.helpers.event import async_track_state_change_event
 
 from .const import DOMAIN, NAME, VERSION
+
+_LOGGER: logging.Logger = logging.getLogger(__package__)
 
 
 class MultiZoneReceiverEntity(Entity):
@@ -17,6 +24,46 @@ class MultiZoneReceiverEntity(Entity):
     def __init__(self, config_entry):
         super().__init__()
         self.config_entry = config_entry
+
+    async def async_added_to_hass(self) -> None:
+        """Entity has been added to hass."""
+        self.async_on_remove(
+            async_track_state_change_event(
+                self.hass,
+                self.get_all_zones(),
+                self.async_update_media_player_state_callback,
+            )
+        )
+
+    @property
+    def updateable_states(self):
+        return list(
+            [
+                STATE_ON,
+                STATE_OFF,
+                STATE_PLAYING,
+                STATE_IDLE,
+            ]
+        )
+
+    @callback
+    def async_update_media_player_state_callback(
+        self, event: Event[EventStateChangedData]
+    ) -> None:
+        """Handle media_player state changes."""
+        new_state = event.data.get("new_state")
+        entity = event.data.get("entity_id")
+        _LOGGER.debug("New state from '%s': '%s'", entity, str(new_state))
+
+        # zone = self._zones[entity]
+
+        # if new_state.state is None:
+        #     self._update_zones(zone, False)
+        #     self.async_write_ha_state()
+        #     return
+
+        # self._update_zones(zone, new_state.state in self.updateable_states)
+        self.async_write_ha_state()
 
     @property
     def runtime_data(self):
