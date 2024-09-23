@@ -29,6 +29,7 @@ class MultiZoneReceiverEntity(Entity):
         self.async_on_remove(
             async_track_state_change_event(
                 self.hass,
+                # TODO: reduce for specific zone entities below
                 self.get_all_zones(),
                 self.async_update_media_player_state_callback,
             )
