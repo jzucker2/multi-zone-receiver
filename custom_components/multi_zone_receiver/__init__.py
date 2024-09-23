@@ -115,8 +115,11 @@ class MultiZoneReceiverData:
     def get_main_zone_display_name(self):
         return self._get_zone_display_name(CONF_ZONE_1)
 
+    def get_all_zones_list(self):
+        return list(self.all_zones.values())
+
     def get_all_zones(self):
-        return list([z.zone_entity for z in self.all_zones.values()])
+        return list([z.zone_entity for z in self.get_all_zones_list()])
 
 
 async def async_setup(hass: HomeAssistant, config: Config):
