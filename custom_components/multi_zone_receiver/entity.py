@@ -104,6 +104,10 @@ class MultiZoneReceiverEntity(Entity):
         return "Main"
 
     @property
+    def zone_name(self):
+        return self.main_zone_name
+
+    @property
     def main_zone_entity(self):
         return self.get_main_zone()
 

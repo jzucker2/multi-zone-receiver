@@ -25,7 +25,7 @@ class MultiZoneReceiverStateSensor(MultiZoneReceiverEntity):
     @property
     def name(self):
         """Return the name of the sensor."""
-        return f"{self.main_zone_name} State"
+        return f"{self.zone_name} State"
 
     @property
     def unique_id_suffix(self):
@@ -49,7 +49,7 @@ class MultiZoneReceiverSourceSensor(MultiZoneReceiverEntity):
     @property
     def name(self):
         """Return the name of the sensor."""
-        return f"{self.main_zone_name} Source"
+        return f"{self.zone_name} Source"
 
     @property
     def unique_id_suffix(self):
@@ -78,7 +78,7 @@ class MultiZoneReceiverVolumeSensor(MultiZoneReceiverEntity):
     @property
     def name(self):
         """Return the name of the sensor."""
-        return f"{self.main_zone_name} Volume"
+        return f"{self.zone_name} Volume"
 
     @property
     def unique_id_suffix(self):

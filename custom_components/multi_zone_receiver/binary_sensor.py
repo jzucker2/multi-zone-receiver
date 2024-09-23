@@ -26,7 +26,7 @@ class MultiZoneReceiverZonePowerBinarySensor(
     @property
     def name(self):
         """Return the name of the binary_sensor."""
-        return f"{self.main_zone_name} Power"
+        return f"{self.zone_name} Power"
 
     @property
     def unique_id_suffix(self):
