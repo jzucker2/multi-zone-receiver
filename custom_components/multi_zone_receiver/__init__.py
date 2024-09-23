@@ -71,6 +71,7 @@ class MultiZoneReceiverData:
     volume_step: float
     other_zone_on_delay_seconds: float
     all_zones: dict[str, Zone]
+    zone_keys: list[str]
 
     @classmethod
     def from_entry(cls, entry: MultiZoneReceiverConfigEntry):
@@ -86,11 +87,17 @@ class MultiZoneReceiverData:
             CONF_ZONE_2: Zone.from_input_dict(CONF_ZONE_2, 2, zone_input_data),
             CONF_ZONE_3: Zone.from_input_dict(CONF_ZONE_3, 3, zone_input_data),
         }
+        zone_keys = [
+            CONF_ZONE_1,
+            CONF_ZONE_2,
+            CONF_ZONE_3,
+        ]
         return cls(
             name=name,
             volume_step=volume_step,
             other_zone_on_delay_seconds=other_zone_on_delay_seconds,
             all_zones=all_zones_dict,
+            zone_keys=zone_keys,
         )
 
     def _get_zone_entity(self, zone_key):
