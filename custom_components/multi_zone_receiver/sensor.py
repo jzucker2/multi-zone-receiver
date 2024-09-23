@@ -94,3 +94,8 @@ class MultiZoneReceiverVolumeSensor(MultiZoneReceiverEntity):
     def state(self) -> float | None:
         """Return the state of the zone."""
         return self.volume_level
+
+    @property
+    def icon(self):
+        """Return the icon of the sensor."""
+        return "mdi:volume-medium"
