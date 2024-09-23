@@ -6,7 +6,6 @@ from homeassistant.components.binary_sensor import (
 )
 
 from . import MultiZoneReceiverConfigEntry
-from .const import BINARY_SENSOR, DEFAULT_NAME
 from .entity import MultiZoneReceiverEntity
 
 
@@ -27,7 +26,7 @@ class MultiZoneReceiverZonePowerBinarySensor(
     @property
     def name(self):
         """Return the name of the binary_sensor."""
-        return f"{DEFAULT_NAME}_{BINARY_SENSOR}_Power"
+        return f"{self.zone_name} Power"
 
     @property
     def unique_id_suffix(self):
