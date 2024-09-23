@@ -7,7 +7,7 @@ from homeassistant.components.media_player import (
     ATTR_MEDIA_VOLUME_LEVEL,
     MediaPlayerState,
 )
-from homeassistant.core import Event, EventStateChangedData, callback
+from homeassistant.core import Event, EventStateChangedData, State, callback
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.event import async_track_state_change_event
 
@@ -136,18 +136,22 @@ class MultiZoneReceiverEntity(Entity):
     def default_zones(self):
         return self.get_default_zones()
 
+    def _get_state_object_for_zone(self, zone_entity) -> State | None:
+        """Return the state of the device."""
+        return self.hass.states.get(zone_entity)
+
     def _get_state_value_for_zone(self, zone_entity) -> MediaPlayerState | None:
         """Return the state of the device."""
-        state = self.hass.states.get(zone_entity)
+        state = self._get_state_object_for_zone(zone_entity)
         if not state:
             return state
         return state.state
 
     def _get_volume_level(self, zone_entity) -> float | None:
-        state = self.hass.states.get(zone_entity)
+        state = self._get_state_object_for_zone(zone_entity)
         if not state:
             return state
-        volume_level = state.attributes[ATTR_MEDIA_VOLUME_LEVEL]
+        volume_level = state.attributes.get(ATTR_MEDIA_VOLUME_LEVEL)
         return volume_level
 
     def _get_is_on_state_for_zone(self, zone_entity) -> bool:
@@ -156,10 +160,10 @@ class MultiZoneReceiverEntity(Entity):
 
     def _get_source_for_zone(self, zone_entity) -> str | None:
         """Return the current input source for a zone."""
-        state = self.hass.states.get(zone_entity)
+        state = self._get_state_object_for_zone(zone_entity)
         if not state:
             return state
-        input_source = state.attributes[ATTR_INPUT_SOURCE]
+        input_source = state.attributes.get(ATTR_INPUT_SOURCE)
         return input_source
 
 

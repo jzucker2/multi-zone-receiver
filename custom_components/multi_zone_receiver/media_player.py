@@ -112,10 +112,10 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
     @property
     def is_volume_muted(self) -> bool:
         """Return boolean if volume is currently muted."""
-        state = self.hass.states.get(self.main_zone_entity)
+        state = self._get_state_object_for_zone(self.main_zone_entity)
         if not state:
             return False
-        muted = state.attributes[ATTR_MEDIA_VOLUME_MUTED]
+        muted = state.attributes.get(ATTR_MEDIA_VOLUME_MUTED)
         return muted
 
     @property
@@ -131,28 +131,28 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
     @property
     def source_list(self) -> list[str] | None:
         """List of available input sources."""
-        state = self.hass.states.get(self.main_zone_entity)
+        state = self._get_state_object_for_zone(self.main_zone_entity)
         if not state:
             return state
-        input_source_list = state.attributes[ATTR_INPUT_SOURCE_LIST]
+        input_source_list = state.attributes.get(ATTR_INPUT_SOURCE_LIST)
         return input_source_list
 
     @property
     def sound_mode(self) -> str | None:
         """Name of the current sound mode."""
-        state = self.hass.states.get(self.main_zone_entity)
+        state = self._get_state_object_for_zone(self.main_zone_entity)
         if not state:
             return state
-        sound_mode = state.attributes[ATTR_SOUND_MODE]
+        sound_mode = state.attributes.get(ATTR_SOUND_MODE)
         return sound_mode
 
     @property
     def sound_mode_list(self) -> list[str] | None:
         """List of available sound modes."""
-        state = self.hass.states.get(self.main_zone_entity)
+        state = self._get_state_object_for_zone(self.main_zone_entity)
         if not state:
             return state
-        sound_mode_list = state.attributes[ATTR_SOUND_MODE_LIST]
+        sound_mode_list = state.attributes.get(ATTR_SOUND_MODE_LIST)
         return sound_mode_list
 
     @property
