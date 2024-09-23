@@ -7,7 +7,6 @@ https://github.com/jzucker2/multi-zone-receiver
 
 from dataclasses import dataclass
 import logging
-from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_NAME
@@ -33,12 +32,45 @@ _LOGGER: logging.Logger = logging.getLogger(__package__)
 type MultiZoneReceiverConfigEntry = ConfigEntry[MultiZoneReceiverData]
 
 
+class ZoneException(Exception):
+    pass
+
+
+@dataclass
+class Zone:
+    zone_key: str
+    zone_number: int
+    zone_entity: str
+    volume_step: float
+
+    @classmethod
+    def from_input_dict(cls, zone_key: str, zone_number: int, input_dict: dict):
+        volume_step = input_dict[CONF_VOLUME_STEP]
+        zone_entity = input_dict[zone_key]
+        return cls(
+            zone_key=zone_key,
+            zone_number=zone_number,
+            zone_entity=zone_entity,
+            volume_step=volume_step,
+        )
+
+    @property
+    def zone_name(self):
+        if self.zone_key == CONF_ZONE_1:
+            return "Main"
+        elif self.zone_key == CONF_ZONE_2:
+            return "Zone 2"
+        elif self.zone_key == CONF_ZONE_3:
+            return "Zone 3"
+        raise ZoneException(f"invalid zone ({self})")
+
+
 @dataclass
 class MultiZoneReceiverData:
     name: str
-    zones: dict[str, Any]
     volume_step: float
     other_zone_on_delay_seconds: float
+    all_zones: dict[str, Zone]
 
     @classmethod
     def from_entry(cls, entry: MultiZoneReceiverConfigEntry):
@@ -46,28 +78,39 @@ class MultiZoneReceiverData:
             "Processing data config entry: %s with entry.data: %s", entry, entry.data
         )
         name = entry.data.get(CONF_NAME)
-        zone_1 = entry.data.get(CONF_ZONE_1)
-        zone_2 = entry.data.get(CONF_ZONE_2)
-        zone_3 = entry.data.get(CONF_ZONE_3)
-        zones_dict = {
-            CONF_ZONE_1: zone_1,
-            CONF_ZONE_2: zone_2,
-            CONF_ZONE_3: zone_3,
-        }
         volume_step = entry.data.get(CONF_VOLUME_STEP)
         other_zone_on_delay_seconds = entry.data.get(CONF_OTHER_ZONE_ON_DELAY_SECONDS)
+        zone_input_data = dict(entry.data)
+        all_zones_dict = {
+            CONF_ZONE_1: Zone.from_input_dict(CONF_ZONE_1, 1, zone_input_data),
+            CONF_ZONE_2: Zone.from_input_dict(CONF_ZONE_2, 2, zone_input_data),
+            CONF_ZONE_3: Zone.from_input_dict(CONF_ZONE_3, 3, zone_input_data),
+        }
         return cls(
             name=name,
-            zones=zones_dict,
             volume_step=volume_step,
             other_zone_on_delay_seconds=other_zone_on_delay_seconds,
+            all_zones=all_zones_dict,
+        )
+
+    def _get_zone_entity(self, zone_key):
+        return self.all_zones[zone_key].zone_entity
+
+    @property
+    def zones(self):
+        return dict(
+            {
+                CONF_ZONE_1: self._get_zone_entity(CONF_ZONE_1),
+                CONF_ZONE_2: self._get_zone_entity(CONF_ZONE_2),
+                CONF_ZONE_3: self._get_zone_entity(CONF_ZONE_3),
+            }
         )
 
     def get_main_zone(self):
-        return self.zones[CONF_ZONE_1]
+        return self.all_zones[CONF_ZONE_1]
 
     def get_all_zones(self):
-        return list(self.zones.values())
+        return list([z.zone_entity for z in self.all_zones.values()])
 
 
 async def async_setup(hass: HomeAssistant, config: Config):

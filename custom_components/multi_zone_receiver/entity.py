@@ -115,7 +115,7 @@ class MultiZoneReceiverEntity(Entity):
         return self.runtime_data.zones
 
     @property
-    def zone_names(self):
+    def zone_keys(self):
         return self.get_zones().keys()
 
     @property
