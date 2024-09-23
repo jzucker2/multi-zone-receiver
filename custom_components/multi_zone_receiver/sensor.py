@@ -11,7 +11,7 @@ async def async_setup_entry(
 ):
     """Setup sensor platform."""
     final_sensor_list = []
-    for zone_key in entry.data.zone_keys:
+    for zone_key in entry.runtime_data.zone_keys:
         final_sensor_list.extend(
             [
                 MultiZoneReceiverStateSensor(entry, zone_key),
