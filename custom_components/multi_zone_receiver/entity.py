@@ -7,7 +7,6 @@ from homeassistant.components.media_player import (
     ATTR_MEDIA_VOLUME_LEVEL,
     MediaPlayerState,
 )
-from homeassistant.const import STATE_IDLE, STATE_OFF, STATE_ON, STATE_PLAYING
 from homeassistant.core import Event, EventStateChangedData, callback
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.event import async_track_state_change_event
@@ -39,10 +38,10 @@ class MultiZoneReceiverEntity(Entity):
     def updateable_states(self):
         return list(
             [
-                STATE_ON,
-                STATE_OFF,
-                STATE_PLAYING,
-                STATE_IDLE,
+                MediaPlayerState.ON,
+                MediaPlayerState.OFF,
+                MediaPlayerState.PLAYING,
+                MediaPlayerState.IDLE,
             ]
         )
 
@@ -99,6 +98,10 @@ class MultiZoneReceiverEntity(Entity):
 
     def get_main_zone(self):
         return self.runtime_data.get_main_zone()
+
+    @property
+    def main_zone_name(self):
+        return "Main"
 
     @property
     def main_zone_entity(self):

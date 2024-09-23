@@ -1,10 +1,8 @@
 """Sensor platform for Multi Zone Receiver."""
 
 from homeassistant.components.media_player import MediaPlayerState
-from homeassistant.components.sensor import SensorDeviceClass
 
 from . import MultiZoneReceiverConfigEntry
-from .const import DEFAULT_NAME, SENSOR
 from .entity import MultiZoneReceiverEntity
 
 
@@ -27,7 +25,7 @@ class MultiZoneReceiverStateSensor(MultiZoneReceiverEntity):
     @property
     def name(self):
         """Return the name of the sensor."""
-        return f"{DEFAULT_NAME}_{SENSOR}_State"
+        return f"{self.main_zone_name} State"
 
     @property
     def unique_id_suffix(self):
@@ -51,7 +49,7 @@ class MultiZoneReceiverSourceSensor(MultiZoneReceiverEntity):
     @property
     def name(self):
         """Return the name of the sensor."""
-        return f"{DEFAULT_NAME}_{SENSOR}_Source"
+        return f"{self.main_zone_name} Source"
 
     @property
     def unique_id_suffix(self):
@@ -77,12 +75,10 @@ class MultiZoneReceiverSourceSensor(MultiZoneReceiverEntity):
 class MultiZoneReceiverVolumeSensor(MultiZoneReceiverEntity):
     """multi_zone_receiver Sensor class."""
 
-    _attr_device_class = SensorDeviceClass.VOLUME
-
     @property
     def name(self):
         """Return the name of the sensor."""
-        return f"{DEFAULT_NAME}_{SENSOR}_Volume"
+        return f"{self.main_zone_name} Volume"
 
     @property
     def unique_id_suffix(self):
