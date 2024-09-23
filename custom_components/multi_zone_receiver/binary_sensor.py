@@ -6,18 +6,20 @@ from homeassistant.components.binary_sensor import (
 )
 
 from . import MultiZoneReceiverConfigEntry
-from .entity import MultiZoneReceiverEntity
+from .entity import MultiZoneReceiverZoneEntity
 
 
 async def async_setup_entry(
     hass, entry: MultiZoneReceiverConfigEntry, async_add_devices
 ):
     """Setup binary_sensor platform."""
-    async_add_devices([MultiZoneReceiverZonePowerBinarySensor(entry)])
+    async_add_devices(
+        [MultiZoneReceiverZonePowerBinarySensor(entry, k) for k in entry.data.zone_keys]
+    )
 
 
 class MultiZoneReceiverZonePowerBinarySensor(
-    MultiZoneReceiverEntity, BinarySensorEntity
+    MultiZoneReceiverZoneEntity, BinarySensorEntity
 ):
     """multi_zone_receiver zone power binary_sensor class."""
 
@@ -36,4 +38,4 @@ class MultiZoneReceiverZonePowerBinarySensor(
     @property
     def is_on(self):
         """Return true if the binary_sensor is on."""
-        return self._get_is_on_state_for_zone(self.main_zone_entity)
+        return self._get_is_on_state_for_zone(self.zone_entity)

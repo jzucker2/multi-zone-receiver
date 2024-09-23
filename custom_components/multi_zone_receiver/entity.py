@@ -160,3 +160,27 @@ class MultiZoneReceiverEntity(Entity):
             return state
         input_source = state.attributes[ATTR_INPUT_SOURCE]
         return input_source
+
+
+class MultiZoneReceiverZoneEntity(MultiZoneReceiverEntity):
+    def __init__(self, config_entry, zone_key):
+        super().__init__(config_entry)
+        self._zone_key = zone_key
+
+    @property
+    def zone_key(self):
+        return self._zone_key
+
+    @property
+    def zone_name(self):
+        return self._get_zone_display_name(self.zone_key)
+
+    @property
+    def zone_entity(self):
+        return self._get_zone_entity(self.zone_key)
+
+    def _get_zone_entity(self, zone_key):
+        return self.runtime_data._get_zone_entity(zone_key)
+
+    def _get_zone_display_name(self, zone_key):
+        return self.runtime_data._get_zone_display_name(zone_key)

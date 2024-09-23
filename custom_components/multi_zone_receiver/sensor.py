@@ -3,23 +3,26 @@
 from homeassistant.components.media_player import MediaPlayerState
 
 from . import MultiZoneReceiverConfigEntry
-from .entity import MultiZoneReceiverEntity
+from .entity import MultiZoneReceiverZoneEntity
 
 
 async def async_setup_entry(
     hass, entry: MultiZoneReceiverConfigEntry, async_add_devices
 ):
     """Setup sensor platform."""
-    async_add_devices(
-        [
-            MultiZoneReceiverStateSensor(entry),
-            MultiZoneReceiverSourceSensor(entry),
-            MultiZoneReceiverVolumeSensor(entry),
-        ]
-    )
+    final_sensor_list = []
+    for zone_key in entry.data.zone_keys:
+        final_sensor_list.extend(
+            [
+                MultiZoneReceiverStateSensor(entry, zone_key),
+                MultiZoneReceiverSourceSensor(entry, zone_key),
+                MultiZoneReceiverVolumeSensor(entry, zone_key),
+            ]
+        )
+    async_add_devices(final_sensor_list)
 
 
-class MultiZoneReceiverStateSensor(MultiZoneReceiverEntity):
+class MultiZoneReceiverStateSensor(MultiZoneReceiverZoneEntity):
     """multi_zone_receiver Sensor class."""
 
     @property
@@ -35,7 +38,7 @@ class MultiZoneReceiverStateSensor(MultiZoneReceiverEntity):
     @property
     def state(self) -> MediaPlayerState | None:
         """Return the state of the zone."""
-        return self._get_state_value_for_zone(self.main_zone_entity)
+        return self._get_state_value_for_zone(self.zone_entity)
 
     @property
     def icon(self):
@@ -43,7 +46,7 @@ class MultiZoneReceiverStateSensor(MultiZoneReceiverEntity):
         return "mdi:audio-video"
 
 
-class MultiZoneReceiverSourceSensor(MultiZoneReceiverEntity):
+class MultiZoneReceiverSourceSensor(MultiZoneReceiverZoneEntity):
     """multi_zone_receiver Sensor class."""
 
     @property
@@ -59,7 +62,7 @@ class MultiZoneReceiverSourceSensor(MultiZoneReceiverEntity):
     @property
     def source(self) -> str | None:
         """Return the current input source."""
-        return self._get_source_for_zone(self.main_zone_entity)
+        return self._get_source_for_zone(self.zone_entity)
 
     @property
     def state(self) -> str | None:
@@ -72,7 +75,7 @@ class MultiZoneReceiverSourceSensor(MultiZoneReceiverEntity):
         return "mdi:import"
 
 
-class MultiZoneReceiverVolumeSensor(MultiZoneReceiverEntity):
+class MultiZoneReceiverVolumeSensor(MultiZoneReceiverZoneEntity):
     """multi_zone_receiver Sensor class."""
 
     @property
@@ -88,7 +91,7 @@ class MultiZoneReceiverVolumeSensor(MultiZoneReceiverEntity):
     @property
     def volume_level(self) -> float | None:
         """Return the volume level of the zone."""
-        return self._get_volume_level(self.main_zone_entity)
+        return self._get_volume_level(self.zone_entity)
 
     @property
     def state(self) -> float | None:
