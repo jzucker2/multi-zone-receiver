@@ -99,9 +99,12 @@ class MultiZoneReceiverEntity(Entity):
     def get_main_zone(self):
         return self.runtime_data.get_main_zone()
 
+    def get_main_zone_display_name(self):
+        return self.runtime_data.get_main_zone_display_name()
+
     @property
     def main_zone_name(self):
-        return "Main"
+        return self.get_main_zone_display_name()
 
     @property
     def zone_name(self):
@@ -115,7 +118,7 @@ class MultiZoneReceiverEntity(Entity):
         return self.runtime_data.zones
 
     @property
-    def zone_names(self):
+    def zone_keys(self):
         return self.get_zones().keys()
 
     @property

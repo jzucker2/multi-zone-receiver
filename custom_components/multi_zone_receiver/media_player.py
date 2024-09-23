@@ -307,7 +307,7 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
     def _get_zone_entities(self, call_data, default_value=None):
         # TODO: handle default better
         if default_value is None:
-            default_value = self.zone_names
+            default_value = self.zone_keys
         zones = call_data.get(ATTR_ZONES, default_value)
         _LOGGER.debug("_get_zones zones: %s", zones)
         final_zones = []
