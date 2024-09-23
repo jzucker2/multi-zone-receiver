@@ -36,7 +36,7 @@ class MultiZoneReceiverZonePowerBinarySensor(
     @property
     def unique_id_suffix(self):
         """Return a second half of ID to use for this entity."""
-        return "power"
+        return f"{self.zone_safe_name}_power"
 
     @property
     def is_on(self):

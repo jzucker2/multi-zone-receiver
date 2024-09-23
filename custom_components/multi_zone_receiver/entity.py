@@ -176,6 +176,10 @@ class MultiZoneReceiverZoneEntity(MultiZoneReceiverEntity):
         return self._get_zone_display_name(self.zone_key)
 
     @property
+    def zone_safe_name(self):
+        return self._get_zone_safe_name(self.zone_key)
+
+    @property
     def zone_entity(self):
         return self._get_zone_entity(self.zone_key)
 
@@ -184,3 +188,6 @@ class MultiZoneReceiverZoneEntity(MultiZoneReceiverEntity):
 
     def _get_zone_display_name(self, zone_key):
         return self.runtime_data._get_zone_display_name(zone_key)
+
+    def _get_zone_safe_name(self, zone_key):
+        return self.runtime_data._get_zone_safe_name(zone_key)

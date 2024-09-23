@@ -64,6 +64,17 @@ class Zone:
             return "Zone 3"
         raise ZoneException(f"invalid zone ({self})")
 
+    @classmethod
+    def _make_safe_zone_name(self, zone_key):
+        return zone_key.replace(" ", "_").replace("-", "_").lower()
+
+    def _get_safe_zone_name(self):
+        return self._make_safe_zone_name(self.zone_key)
+
+    @property
+    def safe_zone_name(self):
+        return self._get_safe_zone_name()
+
 
 @dataclass
 class MultiZoneReceiverData:
@@ -105,6 +116,9 @@ class MultiZoneReceiverData:
 
     def _get_zone_display_name(self, zone_key):
         return self.all_zones[zone_key].zone_name
+
+    def _get_zone_safe_name(self, zone_key):
+        return self.all_zones[zone_key].safe_zone_name
 
     @property
     def zones(self):
