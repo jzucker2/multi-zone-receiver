@@ -96,6 +96,9 @@ class MultiZoneReceiverData:
     def _get_zone_entity(self, zone_key):
         return self.all_zones[zone_key].zone_entity
 
+    def _get_zone_display_name(self, zone_key):
+        return self.all_zones[zone_key].zone_name
+
     @property
     def zones(self):
         return dict(
@@ -108,6 +111,9 @@ class MultiZoneReceiverData:
 
     def get_main_zone(self):
         return self._get_zone_entity(CONF_ZONE_1)
+
+    def get_main_zone_display_name(self):
+        return self._get_zone_display_name(CONF_ZONE_1)
 
     def get_all_zones(self):
         return list([z.zone_entity for z in self.all_zones.values()])
