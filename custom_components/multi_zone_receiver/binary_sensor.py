@@ -14,7 +14,10 @@ async def async_setup_entry(
 ):
     """Setup binary_sensor platform."""
     async_add_devices(
-        [MultiZoneReceiverZonePowerBinarySensor(entry, k) for k in entry.data.zone_keys]
+        [
+            MultiZoneReceiverZonePowerBinarySensor(entry, k)
+            for k in entry.runtime_data.zone_keys
+        ]
     )
 
 
