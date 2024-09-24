@@ -3,7 +3,7 @@
 # Base component constants
 NAME = "Multi Zone Receiver"
 DOMAIN = "multi_zone_receiver"
-VERSION = "0.7.4"
+VERSION = "0.7.5"
 
 ATTRIBUTION = "Data provided by http://jsonplaceholder.typicode.com/"
 ISSUE_URL = "https://github.com/jzucker2/multi-zone-receiver/issues"
