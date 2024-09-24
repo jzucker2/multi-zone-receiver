@@ -37,7 +37,7 @@ class MultiZoneReceiverEntity(Entity):
         self.async_on_remove(
             async_track_state_change_event(
                 self.hass,
-                self.get_state_tracked_entities_list(),
+                self._get_state_tracked_entities_list(),
                 self.async_update_media_player_state_callback,
             )
         )
