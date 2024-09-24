@@ -4,7 +4,11 @@ import logging
 
 from homeassistant.components.media_player import (
     ATTR_INPUT_SOURCE,
+    ATTR_INPUT_SOURCE_LIST,
     ATTR_MEDIA_VOLUME_LEVEL,
+    ATTR_MEDIA_VOLUME_MUTED,
+    ATTR_SOUND_MODE,
+    ATTR_SOUND_MODE_LIST,
     MediaPlayerState,
 )
 from homeassistant.core import Event, EventStateChangedData, State, callback
@@ -24,13 +28,16 @@ class MultiZoneReceiverEntity(Entity):
         super().__init__()
         self.config_entry = config_entry
 
+    def _get_state_tracked_entities_list(self) -> list:
+        """The entities that this entity should track"""
+        return self.get_all_zones()
+
     async def async_added_to_hass(self) -> None:
         """Entity has been added to hass."""
         self.async_on_remove(
             async_track_state_change_event(
                 self.hass,
-                # TODO: reduce for specific zone entities below
-                self.get_all_zones(),
+                self.get_state_tracked_entities_list(),
                 self.async_update_media_player_state_callback,
             )
         )
@@ -172,6 +179,14 @@ class MultiZoneReceiverZoneEntity(MultiZoneReceiverEntity):
         super().__init__(config_entry)
         self._zone_key = zone_key
 
+    def _get_state_tracked_entities_list(self) -> list:
+        """The entities that this entity should track"""
+        return list(
+            [
+                self.zone_entity,
+            ]
+        )
+
     @property
     def zone_key(self):
         return self._zone_key
@@ -196,3 +211,58 @@ class MultiZoneReceiverZoneEntity(MultiZoneReceiverEntity):
 
     def _get_zone_safe_name(self, zone_key):
         return self.runtime_data._get_zone_safe_name(zone_key)
+
+    @property
+    def volume_step(self) -> float:
+        """Return the step to be used by the volume_up and volume_down services."""
+        return self.runtime_data.volume_step
+
+    @property
+    def is_volume_muted(self) -> bool:
+        """Return boolean if volume is currently muted."""
+        state = self._get_state_object_for_zone(self.zone_entity)
+        if not state:
+            return False
+        muted = state.attributes.get(ATTR_MEDIA_VOLUME_MUTED)
+        return muted
+
+    @property
+    def volume_level(self) -> float | None:
+        """Volume level of the media player (0..1)."""
+        return self._get_volume_level(self.zone_entity)
+
+    @property
+    def source(self) -> str | None:
+        """Return the current input source."""
+        return self._get_source_for_zone(self.zone_entity)
+
+    @property
+    def source_list(self) -> list[str] | None:
+        """List of available input sources."""
+        state = self._get_state_object_for_zone(self.zone_entity)
+        if not state:
+            return state
+        input_source_list = state.attributes.get(ATTR_INPUT_SOURCE_LIST)
+        return input_source_list
+
+    @property
+    def sound_mode(self) -> str | None:
+        """Name of the current sound mode."""
+        state = self._get_state_object_for_zone(self.zone_entity)
+        if not state:
+            return state
+        sound_mode = state.attributes.get(ATTR_SOUND_MODE)
+        return sound_mode
+
+    @property
+    def sound_mode_list(self) -> list[str] | None:
+        """List of available sound modes."""
+        state = self._get_state_object_for_zone(self.zone_entity)
+        if not state:
+            return state
+        sound_mode_list = state.attributes.get(ATTR_SOUND_MODE_LIST)
+        return sound_mode_list
+
+    @property
+    def other_zone_on_delay_seconds(self):
+        return self.runtime_data.other_zone_on_delay_seconds

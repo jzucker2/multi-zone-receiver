@@ -133,6 +133,10 @@ class MultiZoneReceiverData:
     def get_main_zone(self):
         return self._get_zone_entity(CONF_ZONE_1)
 
+    @property
+    def main_zone_key(self):
+        return CONF_ZONE_1
+
     def get_main_zone_display_name(self):
         return self._get_zone_display_name(CONF_ZONE_1)
 
