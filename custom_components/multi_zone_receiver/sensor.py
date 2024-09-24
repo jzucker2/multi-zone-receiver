@@ -60,11 +60,6 @@ class MultiZoneReceiverSourceSensor(MultiZoneReceiverZoneEntity):
         return f"{self.zone_safe_name}_source"
 
     @property
-    def source(self) -> str | None:
-        """Return the current input source."""
-        return self._get_source_for_zone(self.zone_entity)
-
-    @property
     def state(self) -> str | None:
         """Return the state of the zone."""
         return self.source
@@ -87,11 +82,6 @@ class MultiZoneReceiverVolumeSensor(MultiZoneReceiverZoneEntity):
     def unique_id_suffix(self):
         """Return a second half of ID to use for this entity."""
         return f"{self.zone_safe_name}_volume"
-
-    @property
-    def volume_level(self) -> float | None:
-        """Return the volume level of the zone."""
-        return self._get_volume_level(self.zone_entity)
 
     @property
     def state(self) -> float | None:

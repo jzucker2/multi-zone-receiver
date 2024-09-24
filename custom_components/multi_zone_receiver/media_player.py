@@ -84,6 +84,10 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverZoneEntity, MediaPlayerEntit
         """Return a second half of ID to use for this entity."""
         return "media_player"
 
+    def _get_state_tracked_entities_list(self) -> list:
+        """The entities that this entity should track"""
+        return self.get_all_zones()
+
     def _get_extra_state_attributes(self) -> Mapping[str, Any] | None:
         final_dict = {
             ATTR_ENTITY_ID: self.get_all_zones(),
