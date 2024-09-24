@@ -4,7 +4,11 @@ import logging
 
 from homeassistant.components.media_player import (
     ATTR_INPUT_SOURCE,
+    ATTR_INPUT_SOURCE_LIST,
     ATTR_MEDIA_VOLUME_LEVEL,
+    ATTR_MEDIA_VOLUME_MUTED,
+    ATTR_SOUND_MODE,
+    ATTR_SOUND_MODE_LIST,
     MediaPlayerState,
 )
 from homeassistant.core import Event, EventStateChangedData, State, callback
@@ -196,3 +200,58 @@ class MultiZoneReceiverZoneEntity(MultiZoneReceiverEntity):
 
     def _get_zone_safe_name(self, zone_key):
         return self.runtime_data._get_zone_safe_name(zone_key)
+
+    @property
+    def volume_step(self) -> float:
+        """Return the step to be used by the volume_up and volume_down services."""
+        return self.runtime_data.volume_step
+
+    @property
+    def is_volume_muted(self) -> bool:
+        """Return boolean if volume is currently muted."""
+        state = self._get_state_object_for_zone(self.main_zone_entity)
+        if not state:
+            return False
+        muted = state.attributes.get(ATTR_MEDIA_VOLUME_MUTED)
+        return muted
+
+    @property
+    def volume_level(self) -> float | None:
+        """Volume level of the media player (0..1)."""
+        return self._get_volume_level(self.main_zone_entity)
+
+    @property
+    def source(self) -> str | None:
+        """Return the current input source."""
+        return self._get_source_for_zone(self.main_zone_entity)
+
+    @property
+    def source_list(self) -> list[str] | None:
+        """List of available input sources."""
+        state = self._get_state_object_for_zone(self.main_zone_entity)
+        if not state:
+            return state
+        input_source_list = state.attributes.get(ATTR_INPUT_SOURCE_LIST)
+        return input_source_list
+
+    @property
+    def sound_mode(self) -> str | None:
+        """Name of the current sound mode."""
+        state = self._get_state_object_for_zone(self.main_zone_entity)
+        if not state:
+            return state
+        sound_mode = state.attributes.get(ATTR_SOUND_MODE)
+        return sound_mode
+
+    @property
+    def sound_mode_list(self) -> list[str] | None:
+        """List of available sound modes."""
+        state = self._get_state_object_for_zone(self.main_zone_entity)
+        if not state:
+            return state
+        sound_mode_list = state.attributes.get(ATTR_SOUND_MODE_LIST)
+        return sound_mode_list
+
+    @property
+    def other_zone_on_delay_seconds(self):
+        return self.runtime_data.other_zone_on_delay_seconds

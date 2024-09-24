@@ -7,11 +7,9 @@ from typing import Any
 
 from homeassistant.components.media_player import (
     ATTR_INPUT_SOURCE,
-    ATTR_INPUT_SOURCE_LIST,
     ATTR_MEDIA_VOLUME_LEVEL,
     ATTR_MEDIA_VOLUME_MUTED,
     ATTR_SOUND_MODE,
-    ATTR_SOUND_MODE_LIST,
     DOMAIN as MEDIA_PLAYER_DOMAIN,
     SERVICE_SELECT_SOUND_MODE,
     SERVICE_SELECT_SOURCE,
@@ -45,7 +43,7 @@ from .const import (
     SERVICE_TOGGLE_VOLUME_MUTE,
     SERVICE_TURN_ON_WITH_SOURCE,
 )
-from .entity import MultiZoneReceiverEntity
+from .entity import MultiZoneReceiverZoneEntity
 
 _LOGGER: logging.Logger = logging.getLogger(__package__)
 
@@ -64,12 +62,13 @@ async def async_setup_entry(
     hass, entry: MultiZoneReceiverConfigEntry, async_add_devices
 ):
     """Setup media_player platform."""
-    only_receiver = MultiZoneReceiverMediaPlayer(entry)
+    main_zone_key = entry.runtime_data.main_zone_key
+    only_receiver = MultiZoneReceiverMediaPlayer(entry, main_zone_key)
     async_add_devices([only_receiver])
     only_receiver.async_register_hass_custom_actions(hass)
 
 
-class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
+class MultiZoneReceiverMediaPlayer(MultiZoneReceiverZoneEntity, MediaPlayerEntity):
     """multi_zone_receiver media_player class. Based on https://github.com/home-assistant/core/blob/dev/homeassistant/components/media_player/__init__.py"""
 
     _attr_device_class = MediaPlayerDeviceClass.RECEIVER
@@ -103,61 +102,6 @@ class MultiZoneReceiverMediaPlayer(MultiZoneReceiverEntity, MediaPlayerEntity):
     def state(self) -> MediaPlayerState | None:
         """Return the state of the device."""
         return self._get_state_value_for_zone(self.main_zone_entity)
-
-    @property
-    def volume_step(self) -> float:
-        """Return the step to be used by the volume_up and volume_down services."""
-        return self.runtime_data.volume_step
-
-    @property
-    def is_volume_muted(self) -> bool:
-        """Return boolean if volume is currently muted."""
-        state = self._get_state_object_for_zone(self.main_zone_entity)
-        if not state:
-            return False
-        muted = state.attributes.get(ATTR_MEDIA_VOLUME_MUTED)
-        return muted
-
-    @property
-    def volume_level(self) -> float | None:
-        """Volume level of the media player (0..1)."""
-        return self._get_volume_level(self.main_zone_entity)
-
-    @property
-    def source(self) -> str | None:
-        """Return the current input source."""
-        return self._get_source_for_zone(self.main_zone_entity)
-
-    @property
-    def source_list(self) -> list[str] | None:
-        """List of available input sources."""
-        state = self._get_state_object_for_zone(self.main_zone_entity)
-        if not state:
-            return state
-        input_source_list = state.attributes.get(ATTR_INPUT_SOURCE_LIST)
-        return input_source_list
-
-    @property
-    def sound_mode(self) -> str | None:
-        """Name of the current sound mode."""
-        state = self._get_state_object_for_zone(self.main_zone_entity)
-        if not state:
-            return state
-        sound_mode = state.attributes.get(ATTR_SOUND_MODE)
-        return sound_mode
-
-    @property
-    def sound_mode_list(self) -> list[str] | None:
-        """List of available sound modes."""
-        state = self._get_state_object_for_zone(self.main_zone_entity)
-        if not state:
-            return state
-        sound_mode_list = state.attributes.get(ATTR_SOUND_MODE_LIST)
-        return sound_mode_list
-
-    @property
-    def other_zone_on_delay_seconds(self):
-        return self.runtime_data.other_zone_on_delay_seconds
 
     async def _async_turn_on(self, zones=None) -> None:
         """Turn on media player."""
