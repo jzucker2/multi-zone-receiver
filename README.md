@@ -114,6 +114,8 @@ Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [in
   - For selecting entities
 - https://developers.home-assistant.io/docs/core/entity/#entity-naming
   - Entity naming (this needs a redo)
+- PR to add images for this custom integration
+  - https://github.com/home-assistant/brands/pull/5949
 
 ## Debug Notes
 
